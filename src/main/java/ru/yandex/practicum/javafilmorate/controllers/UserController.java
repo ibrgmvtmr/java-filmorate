@@ -34,6 +34,9 @@ public class UserController {
     @PutMapping
     public User updateUser(@Valid @RequestBody User user) {
         if (users.containsKey(user.getId())) {
+            if (user.getName() == null || user.getName().isBlank() || user.getName().isEmpty()) {
+                user.setName(user.getLogin());
+            }
             log.info("Обновление аккаунта");
             users.put(user.getId(), user);
             return user;
