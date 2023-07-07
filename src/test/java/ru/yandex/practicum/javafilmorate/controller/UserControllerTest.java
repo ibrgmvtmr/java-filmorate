@@ -27,6 +27,7 @@ public class UserControllerTest {
 
     @MockBean
     private UserController userController;
+
     @Test
     @DisplayName("Добавление нового пользователя - login : null")
     public void methodPost_NewUserValidFalse_LoginNullTest() throws Exception {
@@ -35,11 +36,11 @@ public class UserControllerTest {
                                 "{" +
                                         "\"name\":\"test\"," +
                                         "\"birthday\":\"2023-01-01\"," +
-                                        "\"email\":test@gmail.com" +
+                                        "\"email\":\"test@gmail.com\"" +
                                         "}"
                         )
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is(400));
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -51,11 +52,11 @@ public class UserControllerTest {
                                 "{" +
                                         "\"name\":\"test\"," +
                                         "\"birthday\":\"2023-01-01\"," +
-                                        "\"login\":test" +
+                                        "\"login\":\"test\"" +
                                         "}"
                         )
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is(400));
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -67,12 +68,11 @@ public class UserControllerTest {
                                         "\"email\":\"incorrect\"," +
                                         "\"name\":\"test\"," +
                                         "\"birthday\":\"2023-01-01\"," +
-                                        "\"login\":test" +
+                                        "\"login\":\"test\"" +
                                         "}"
                         )
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is(400));
-
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -89,10 +89,9 @@ public class UserControllerTest {
                 .andExpect(status().isOk());
     }
 
-
     @Test
     @DisplayName("Добавление нового пользователя - birthday : null")
-    public void methodPost_NewUserValidFalse_birthdayNullTest() throws Exception{
+    public void methodPost_NewUserValidFalse_BirthdayNullTest() throws Exception {
         mockMvc.perform(post("/users")
                         .content(
                                 "{" +
@@ -102,11 +101,12 @@ public class UserControllerTest {
                                         "}"
                         )
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is(400));
+                .andExpect(status().isBadRequest());
     }
+
     @Test
     @DisplayName("Добавление нового пользователя")
-    public void methodPost_NewUserValidTrue() throws Exception{
+    public void methodPost_NewUserValidTrue() throws Exception {
         mockMvc.perform(post("/users")
                         .content(
                                 "{" +
@@ -117,6 +117,6 @@ public class UserControllerTest {
                                         "}"
                         )
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is(200));
+                .andExpect(status().isOk());
     }
 }

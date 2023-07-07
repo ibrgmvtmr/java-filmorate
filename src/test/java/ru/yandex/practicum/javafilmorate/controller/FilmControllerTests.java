@@ -10,7 +10,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -20,7 +19,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class FilmControllerTests {
     @Autowired
     private MockMvc mockMvc;
-
 
     @Test
     @DisplayName("Добавление нового фильма - duration : 0")
@@ -35,16 +33,15 @@ public class FilmControllerTests {
     @Test
     @DisplayName("Добавление нового фильма - name : null")
     public void methodPost_NewFilmValidFalse_NameNullTest() throws Exception {
-
         mockMvc.perform(post("/films")
-                .content(
-                        "{" +
-                                "\"description\":\"test\"," +
-                                "\"releaseDate\":\"2023-01-01\"," +
-                                "\"duration\":135" +
-                                "}"
-                )
-                .contentType(MediaType.APPLICATION_JSON))
+                        .content(
+                                "{" +
+                                        "\"description\":\"test\"," +
+                                        "\"releaseDate\":\"2023-01-01\"," +
+                                        "\"duration\":135" +
+                                        "}"
+                        )
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(400));
     }
 
@@ -52,14 +49,14 @@ public class FilmControllerTests {
     @DisplayName("Добавление нового фильма - description : null")
     public void methodPost_NewFilmValidFalse_DescriptionNullTest() throws Exception {
         mockMvc.perform(post("/films")
-                .content(
-                        "{" +
-                                "\"name\":\"test\"," +
-                                "\"releaseDate\":\"2023-01-01\"," +
-                                "\"duration\":135" +
-                                "}"
-                )
-                .contentType(MediaType.APPLICATION_JSON))
+                        .content(
+                                "{" +
+                                        "\"name\":\"test\"," +
+                                        "\"releaseDate\":\"2023-01-01\"," +
+                                        "\"duration\":135" +
+                                        "}"
+                        )
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(400));
 
     }
@@ -70,7 +67,7 @@ public class FilmControllerTests {
         mockMvc.perform(post("/films")
                         .content(
                                 "{" +
-                                        "\"name\":\"test\","+
+                                        "\"name\":\"test\"," +
                                         "\"description\":\"test\"," +
                                         "\"releaseDate\":\"1800-01-01\"," +
                                         "\"duration\":135" +
@@ -80,14 +77,13 @@ public class FilmControllerTests {
                 .andExpect(status().is(400));
     }
 
-
     @Test
     @DisplayName("Добавление нового фильма")
-    public void methodPost_NewFilmValidTrue() throws Exception{
+    public void methodPost_NewFilmValidTrue() throws Exception {
         mockMvc.perform(post("/films")
                         .content(
                                 "{" +
-                                        "\"name\":\"test\","+
+                                        "\"name\":\"test\"," +
                                         "\"description\":\"test\"," +
                                         "\"releaseDate\":\"2020-01-01\"," +
                                         "\"duration\":135" +
