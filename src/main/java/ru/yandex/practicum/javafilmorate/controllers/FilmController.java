@@ -20,7 +20,7 @@ public class FilmController {
     private int generatedId = 1;
 
     @PostMapping
-    public Film createFilm(@Valid @RequestBody Film film){
+    public Film createFilm(@Valid @RequestBody Film film) {
         log.info("Добавление нового фильма: {}", film);
         film.setId(generatedId++);
         log.info("Фильм успешно добавлен: {}", film);
@@ -29,7 +29,7 @@ public class FilmController {
     }
 
     @PutMapping("/{id}")
-    public Film updateFilm(@PathVariable int id, @Valid @RequestBody Film updatedFilm){
+    public Film updateFilm(@PathVariable int id, @Valid @RequestBody Film updatedFilm) {
         if(films.containsKey(id)){
             log.info("Обновление фильма");
             updatedFilm.setId(id);
@@ -42,7 +42,7 @@ public class FilmController {
     }
 
     @GetMapping
-    public List<Film> getFilms(){
+    public List<Film> getFilms() {
         log.info("Получение всех фильмов");
         return new ArrayList<>(films.values());
     }

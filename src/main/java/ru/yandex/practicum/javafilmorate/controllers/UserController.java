@@ -20,7 +20,7 @@ public class UserController {
     private int generatedId = 1;
 
     @PostMapping
-    public User createUser(@Valid @RequestBody User user){
+    public User createUser(@Valid @RequestBody User user) {
         log.info("Добавление нового пользователя: {}", user);
         if (user.getName().isBlank() || user.getName().isEmpty()) {
             user.setName(user.getLogin());
@@ -32,7 +32,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public User updateUser(@PathVariable int id, @Valid @RequestBody User updatedUser){
+    public User updateUser(@PathVariable int id, @Valid @RequestBody User updatedUser) {
         if(users.containsKey(id)){
             log.info("Обновление аккаунта");
             updatedUser.setId(id);
@@ -45,7 +45,7 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getUsers(){
+    public List<User> getUsers() {
         log.info("Получение всех пользователей");
         return new ArrayList<>(users.values());
     }
