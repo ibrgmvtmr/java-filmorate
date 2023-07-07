@@ -15,14 +15,14 @@ public class User {
     @PositiveOrZero
     private int id;
 
+    private String name;
+
     @NotBlank(message = "Отсутствует email")
     @Email(message = "Некорректный email")
     private String email;
 
     @NotBlank(message = "логин пуст")
     private String login;
-
-    private String name;
 
     @NotNull(message = "Не указана дата рождения")
     @PastOrPresent(message = "Некорректная дата рождения")
