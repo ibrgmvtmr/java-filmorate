@@ -13,7 +13,7 @@ import java.util.Map;
 
 @Slf4j
 @RestController
-@RequestMapping ("/films")
+@RequestMapping("/films")
 public class FilmController {
 
     private final Map<Integer, Film> films = new HashMap<>();
@@ -30,7 +30,7 @@ public class FilmController {
 
     @PutMapping("/{id}")
     public Film updateFilm(@PathVariable int id, @Valid @RequestBody Film updatedFilm) {
-        if(films.containsKey(id)){
+        if (films.containsKey(id)) {
             log.info("Обновление фильма");
             updatedFilm.setId(id);
             films.put(updatedFilm.getId(), updatedFilm);

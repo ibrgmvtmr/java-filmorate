@@ -13,7 +13,7 @@ import java.util.Map;
 
 @Slf4j
 @RestController
-@RequestMapping ("/users")
+@RequestMapping("/users")
 public class UserController {
 
     private final Map<Integer, User> users = new HashMap<>();
@@ -33,7 +33,7 @@ public class UserController {
 
     @PutMapping("/{id}")
     public User updateUser(@PathVariable int id, @Valid @RequestBody User updatedUser) {
-        if(users.containsKey(id)){
+        if (users.containsKey(id)) {
             log.info("Обновление аккаунта");
             updatedUser.setId(id);
             users.put(updatedUser.getId(), updatedUser);
