@@ -28,13 +28,12 @@ public class FilmController {
         return film;
     }
 
-    @PutMapping("/{id}")
-    public Film updateFilm(@PathVariable int id, @Valid @RequestBody Film updatedFilm) {
-        if (films.containsKey(id)) {
+    @PutMapping
+    public Film updateFilm(@Valid @RequestBody Film film) {
+        if (films.containsKey(film.getId())) {
             log.info("Обновление фильма");
-            updatedFilm.setId(id);
-            films.put(updatedFilm.getId(), updatedFilm);
-            return updatedFilm;
+            films.put(film.getId(), film);
+            return film;
         } else {
             log.warn("Валидация фильма не прошла");
             throw new NotFoundException("Фильм не найден");

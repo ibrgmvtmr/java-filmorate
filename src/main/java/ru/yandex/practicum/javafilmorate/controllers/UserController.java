@@ -31,13 +31,12 @@ public class UserController {
         return user;
     }
 
-    @PutMapping("/{id}")
-    public User updateUser(@PathVariable int id, @Valid @RequestBody User updatedUser) {
-        if (users.containsKey(id)) {
+    @PutMapping
+    public User updateUser(@Valid @RequestBody User user) {
+        if (users.containsKey(user.getId())) {
             log.info("Обновление аккаунта");
-            updatedUser.setId(id);
-            users.put(updatedUser.getId(), updatedUser);
-            return updatedUser;
+            users.put(user.getId(), user);
+            return user;
         } else {
             log.warn("Валидация пользователя не прошла");
             throw new NotFoundException("Пользователь не найден");
