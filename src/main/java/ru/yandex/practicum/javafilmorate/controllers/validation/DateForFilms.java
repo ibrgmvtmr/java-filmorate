@@ -12,7 +12,6 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = DateForFilmsValid.class)
-
 public @interface DateForFilms {
     String message() default "Дата релиза неверна, указана раньше чем 28 декабря 1895 года";
 
