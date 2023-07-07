@@ -22,7 +22,7 @@ public class UserController {
     @PostMapping
     public User createUser(@Valid @RequestBody User user) {
         log.info("Добавление нового пользователя: {}", user);
-        if (user.getName() == null|| user.getName().isBlank() || user.getName().isEmpty()) {
+        if (user.getName() == null || user.getName().isBlank() || user.getName().isEmpty()) {
             user.setName(user.getLogin());
         }
         user.setId(generatedId++);
