@@ -8,6 +8,7 @@ import ru.yandex.practicum.javafilmorate.controllers.validation.DateForFilms;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
+import java.util.Set;
 
 @Data
 @Builder
@@ -31,4 +32,6 @@ public class Film {
 
     @Min(value = 1, message = "Неправильная продолжительность фильма")
     private int duration;
+
+    private Set<Integer> likes;
 }

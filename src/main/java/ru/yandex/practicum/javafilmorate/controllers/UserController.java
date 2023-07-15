@@ -1,54 +1,58 @@
 package ru.yandex.practicum.javafilmorate.controllers;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.javafilmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.javafilmorate.model.User;
+import ru.yandex.practicum.javafilmorate.service.UserService;
+import ru.yandex.practicum.javafilmorate.storage.interfaceStorage.UserStorage;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @RestController
-@RequestMapping("/users")
+@RequiredArgsConstructor
+@RequestMapping(value = "/users", produces = "application/json")
 public class UserController {
 
-    private final Map<Integer, User> users = new HashMap<>();
-    private int generatedId = 1;
+    private final UserStorage userStorage;
+    private final UserService userService;
 
     @PostMapping
-    public User createUser(@Valid @RequestBody User user) {
-        log.info("Добавление нового пользователя: {}", user);
-        if (user.getName() == null || user.getName().isBlank() || user.getName().isEmpty()) {
-            user.setName(user.getLogin());
-        }
-        user.setId(generatedId++);
-        log.info("Пользователь успешно добавлен: {}", user);
-        users.put(user.getId(), user);
-        return user;
+    public User create(@Valid @RequestBody User user) {
+        log.info("Поступил запрос на создание пользователя.");
+        return userStorage.createUser(user);
     }
 
     @PutMapping
     public User updateUser(@Valid @RequestBody User user) {
-        if (users.containsKey(user.getId())) {
-            if (user.getName() == null || user.getName().isBlank() || user.getName().isEmpty()) {
-                user.setName(user.getLogin());
-            }
-            log.info("Обновление аккаунта");
-            users.put(user.getId(), user);
-            return user;
-        } else {
-            log.warn("Валидация пользователя не прошла");
-            throw new NotFoundException("Пользователь не найден");
-        }
+        log.info("Поступил запрос на обновление пользователя.");
+        return userStorage.updateUser(user);
     }
 
-    @GetMapping
-    public List<User> getUsers() {
-        log.info("Получение всех пользователей");
-        return new ArrayList<>(users.values());
+    @PutMapping("/{id}/friends/{friendId}")
+    public User addFriend(@PathVariable String id, @PathVariable String friendId) {
+        log.info("Поступил запрос на добавления в друзья.");
+        return userService.addFriend(Integer.parseInt(id), Integer.parseInt(friendId));
     }
+
+    @DeleteMapping("/{id}/friends/{friendId}")
+    public void deleteFriend(@PathVariable String id, @PathVariable String friendId){
+        log.info("Поступил запрос на удаление из друзей.");
+        userService.deleteFriend(Integer.parseInt(id), Integer.parseInt(friendId));
+    }
+
+    @GetMapping("/{id}/friends")
+    public List<User> getFriends(@PathVariable String id){
+        log.info("Поступил запрос на получение списка друзей.");
+        return userService.getUserFriends(Integer.parseInt(id));
+    }
+
+    @GetMapping("/{id}/friends/common/{otherId}")
+    public List<User> getCommonFriends(@PathVariable String id, @PathVariable String otherId){
+        log.info("Поступил запрос на получения списка общих друзей.");
+        return userService.getCommonFriends(Integer.parseInt(id), Integer.parseInt(otherId));
+    }
+
 }
