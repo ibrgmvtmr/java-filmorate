@@ -36,11 +36,14 @@ public class FilmController {
     }
 
     @PutMapping("/{id}/like/{userId}")
-    public void addLke(@PathVariable String filmId, @PathVariable String userId){
+    public void addLke(@PathVariable String filmId, @PathVariable String userId) {
         filmService.addLike(Integer.parseInt(filmId), Integer.parseInt(userId));
     }
+
+    // Add an empty line here to separate the methods
+
     @PutMapping("/{id}/like/{userId}")
-    public void deleteLike(@PathVariable String filmId, @PathVariable String userId){
+    public void deleteLike(@PathVariable String filmId, @PathVariable String userId) {
         filmService.deleteLike(Integer.parseInt(filmId), Integer.parseInt(userId));
     }
 
