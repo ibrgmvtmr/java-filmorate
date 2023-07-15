@@ -38,19 +38,19 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}/friends/{friendId}")
-    public void deleteFriend(@PathVariable String id, @PathVariable String friendId){
+    public void deleteFriend(@PathVariable String id, @PathVariable String friendId) {
         log.info("Поступил запрос на удаление из друзей.");
         userService.deleteFriend(Integer.parseInt(id), Integer.parseInt(friendId));
     }
 
     @GetMapping("/{id}/friends")
-    public List<User> getFriends(@PathVariable String id){
+    public List<User> getFriends(@PathVariable String id) {
         log.info("Поступил запрос на получение списка друзей.");
         return userService.getUserFriends(Integer.parseInt(id));
     }
 
     @GetMapping("/{id}/friends/common/{otherId}")
-    public List<User> getCommonFriends(@PathVariable String id, @PathVariable String otherId){
+    public List<User> getCommonFriends(@PathVariable String id, @PathVariable String otherId) {
         log.info("Поступил запрос на получения списка общих друзей.");
         return userService.getCommonFriends(Integer.parseInt(id), Integer.parseInt(otherId));
     }
