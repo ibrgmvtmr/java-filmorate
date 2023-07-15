@@ -31,6 +31,18 @@ public class UserController {
         return userStorage.updateUser(user);
     }
 
+    @GetMapping
+    public List<User> getUsers() {
+        log.info("Поступил запрос на получение списка пользователей.");
+        return userStorage.getUsers();
+    }
+
+    @GetMapping("/{id}")
+    public User getFilm(@PathVariable String id) {
+        log.info("Получен GET-запрос на получение фильма");
+        return userStorage.getUser(Integer.parseInt(id));
+    }
+
     @PutMapping("/{id}/friends/{friendId}")
     public User addFriend(@PathVariable String id, @PathVariable String friendId) {
         log.info("Поступил запрос на добавления в друзья.");

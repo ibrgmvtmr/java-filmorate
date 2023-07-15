@@ -35,6 +35,12 @@ public class FilmController {
         return filmStorage.getFilms();
     }
 
+    @GetMapping("/{id}")
+    public Film getFilm(@PathVariable String id) {
+        log.info("Получен GET-запрос на получение фильма");
+        return filmStorage.getFilm(Integer.parseInt(id));
+    }
+
     @PutMapping("/{filmId}/like/{userId}")
     public void addLke(@PathVariable String filmId, @PathVariable String userId) {
         filmService.addLike(Integer.parseInt(filmId), Integer.parseInt(userId));
