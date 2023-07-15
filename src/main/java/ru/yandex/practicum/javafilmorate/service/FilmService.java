@@ -18,11 +18,11 @@ public class FilmService {
         this.filmStorage = filmStorage;
     }
 
-    public void addLike(int filmId, int userId){
+    public void addLike(int filmId, int userId) {
         filmStorage.getFilm(filmId).getLikes().add(userId);
     }
 
-    public void deleteLike(int filmId, int userId){
+    public void deleteLike(int filmId, int userId) {
         if (filmStorage.getFilm(filmId).getLikes().contains(userId)) {
             filmStorage.getFilm(filmId).getLikes().remove(userId);
         } else throw new NotFoundException("Пользователь не ставил лайк на данный фильм.");

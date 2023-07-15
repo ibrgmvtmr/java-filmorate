@@ -12,7 +12,7 @@ import java.util.List;
 public class UserService {
     private final UserStorage userStorage;
     @Autowired
-    public UserService(UserStorage userStorage){
+    public UserService(UserStorage userStorage) {
         this.userStorage = userStorage;
     }
 
