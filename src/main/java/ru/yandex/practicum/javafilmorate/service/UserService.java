@@ -10,7 +10,9 @@ import java.util.List;
 
 @Service
 public class UserService {
+
     private final UserStorage userStorage;
+
     @Autowired
     public UserService(UserStorage userStorage) {
         this.userStorage = userStorage;
@@ -30,8 +32,8 @@ public class UserService {
 
     public List<User> getCommonFriends(Integer userId, Integer friendId) {
         List<User> commonFriends = new ArrayList<>();
-        for(Integer id: userStorage.getUser(userId).getFriends()){
-            if(userStorage.getUser(friendId).getFriends().contains(id)){
+        for (Integer id : userStorage.getUser(userId).getFriends()) {
+            if (userStorage.getUser(friendId).getFriends().contains(id)) {
                 commonFriends.add(userStorage.getUser(userId));
             }
         }
@@ -39,6 +41,6 @@ public class UserService {
     }
 
     public List<User> getUserFriends(Integer id) {
-        return List.of((User)userStorage.getUsers().get(id).getFriends());
+        return List.of((User) userStorage.getUsers().get(id).getFriends());
     }
 }
