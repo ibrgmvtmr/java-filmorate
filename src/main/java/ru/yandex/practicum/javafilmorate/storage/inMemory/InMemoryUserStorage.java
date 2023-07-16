@@ -56,13 +56,11 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public List<User> getCommonFriends(Integer userId, Integer friendId) {
         List<User> commonFriends = new ArrayList<>();
-        Optional<User> user = getUser(userId);
-        Optional<User> friend = getUser(friendId);
-        if (user.isPresent() && friend.isPresent()) {
-            for (Integer id : user.get().getFriends()) {
-                if (friend.get().getFriends().contains(id)) {
-                    commonFriends.add(users.get(id));
-                }
+        User user = getUser(userId).orElseThrow(() -> new NotFoundException("Пользователь с таким ID не найден"));
+        User friend = getUser(friendId).orElseThrow(() -> new NotFoundException("Пользователь с таким ID не найден"));
+        for (Integer id : user.getFriends()) {
+            if (friend.getFriends().contains(id)) {
+                commonFriends.add(users.get(id));
             }
         }
 
