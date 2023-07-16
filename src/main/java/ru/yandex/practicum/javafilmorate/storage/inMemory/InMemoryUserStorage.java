@@ -1,6 +1,7 @@
 package ru.yandex.practicum.javafilmorate.storage.inMemory;
 
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.javafilmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.javafilmorate.model.User;
 import ru.yandex.practicum.javafilmorate.storage.interfaceStorage.UserStorage;
 
@@ -15,6 +16,7 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public void createUser(User user) {
         user.setId(generatedId++);
+        user.setFriends(new HashSet<>());
         users.put(user.getId(), user);
     }
 
@@ -35,8 +37,14 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public void addFriend(Integer userId, Integer friendId) {
-        users.get(userId).getFriends().add(friendId);
-        users.get(friendId).getFriends().add(userId);
+        if(getUser(userId).isPresent()){
+            if(getUser(friendId).isPresent()){
+                getUser(userId).get().getFriends().add(friendId);
+                getUser(friendId).get().getFriends().add(userId);
+            }
+        } else {
+            throw new NotFoundException("Пользователь не найден");
+        }
     }
 
     @Override

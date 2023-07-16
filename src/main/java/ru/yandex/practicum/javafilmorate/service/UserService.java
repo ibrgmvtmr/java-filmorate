@@ -7,7 +7,6 @@ import ru.yandex.practicum.javafilmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.javafilmorate.model.User;
 import ru.yandex.practicum.javafilmorate.storage.inMemory.InMemoryUserStorage;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -99,11 +98,9 @@ public class UserService {
             String msg = "Пользователь с таким ID не найден";
             log.warn(msg);
             throw new NotFoundException(msg);
-        } else if (inMemoryUserStorage.getUser(userId).get().getFriends().isEmpty()) {
-            System.out.println("Список друзей пуст");
-            return new ArrayList<>();
+        } else {
+            return inMemoryUserStorage.getUsersFriends(userId);
         }
-        return inMemoryUserStorage.getUsersFriends(userId);
     }
 
     public List<User> getCommonFriends(int userId, int friendId) {
