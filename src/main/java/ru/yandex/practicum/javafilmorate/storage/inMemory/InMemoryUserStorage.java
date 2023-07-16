@@ -56,13 +56,19 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public List<User> getCommonFriends(Integer userId, Integer friendId) {
         List<User> commonFriends = new ArrayList<>();
-        for (Integer id : users.get(userId).getFriends()) {
-            if (users.get(friendId).getFriends().contains(id)) {
-                commonFriends.add(users.get(userId));
+        Optional<User> user = getUser(userId);
+        Optional<User> friend = getUser(friendId);
+        if (user.isPresent() && friend.isPresent()) {
+            for (Integer id : user.get().getFriends()) {
+                if (friend.get().getFriends().contains(id)) {
+                    commonFriends.add(users.get(id));
+                }
             }
         }
+
         return commonFriends;
     }
+
 
     @Override
     public List<User> getUsersFriends(Integer userId) {
