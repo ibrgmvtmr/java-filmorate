@@ -99,7 +99,7 @@ public class UserService {
             String msg = "Пользователь с таким ID не найден";
             log.warn(msg);
             throw new NotFoundException(msg);
-        } else if(inMemoryUserStorage.getUser(userId).get().getFriends().isEmpty()){
+        } else if (inMemoryUserStorage.getUser(userId).get().getFriends().isEmpty()) {
             System.out.println("Список друзей пуст");
             return new ArrayList<>();
         }
@@ -119,6 +119,5 @@ public class UserService {
         }
         log.debug("получение общих знакомых");
         return inMemoryUserStorage.getCommonFriends(userId, friendId);
-
     }
 }
