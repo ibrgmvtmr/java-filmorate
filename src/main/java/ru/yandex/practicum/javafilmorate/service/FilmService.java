@@ -26,27 +26,30 @@ public class FilmService {
         this.inMemoryUserStorage = inMemoryUserStorage;
     }
 
-    public void createFilm(Film film){
+    public void createFilm(Film film) {
         if (film.getDuration() <= 0) {
             String msg = "Неправильная продолжительность фильма";
             log.warn(msg);
             throw new IllegalStateException(msg);
         }
+
         if (film.getReleaseDate().isBefore(firstFilmRelease)) {
             String msg = "Неверная дата релиза фильма";
             log.warn(msg);
             throw new IllegalStateException(msg);
         }
+
         inMemoryFilmStorage.createFilm(film);
         log.debug("Фильм добавлен: {}", film);
     }
 
-    public void updateFilm(Film film){
-        if(inMemoryFilmStorage.getFilm(film.getId()).isEmpty()){
+    public void updateFilm(Film film) {
+        if (inMemoryFilmStorage.getFilm(film.getId()).isEmpty()) {
             String msg = "Фильм с таким ID не существует";
             log.warn(msg);
             throw new NotFoundException(msg);
         }
+
         inMemoryFilmStorage.updateFilm(film);
         log.debug("Фильм обновлён");
     }
