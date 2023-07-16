@@ -60,7 +60,7 @@ public class FilmService {
     }
 
     public Optional<Film> getFilm(int filmID) {
-        if(inMemoryFilmStorage.getFilm(filmID).isEmpty()){
+        if (inMemoryFilmStorage.getFilm(filmID).isEmpty()) {
             String msg = "Фильм с таким ID не существует";
             log.warn(msg);
             throw new NotFoundException(msg);
@@ -75,7 +75,7 @@ public class FilmService {
             log.warn(msg);
             throw new NotFoundException(msg);
         }
-        if(inMemoryUserStorage.getUser(userId).isEmpty()){
+        if (inMemoryUserStorage.getUser(userId).isEmpty()) {
             String msg = "Пользователя с таким ID не существует";
             log.warn(msg);
             throw new NotFoundException(msg);
@@ -90,7 +90,7 @@ public class FilmService {
             log.warn(msg);
             throw new NotFoundException(msg);
         }
-        if(inMemoryUserStorage.getUser(userId).isEmpty()){
+        if (inMemoryUserStorage.getUser(userId).isEmpty()) {
             String msg = "Пользователя с таким ID не существует";
             log.warn(msg);
             throw new NotFoundException(msg);
