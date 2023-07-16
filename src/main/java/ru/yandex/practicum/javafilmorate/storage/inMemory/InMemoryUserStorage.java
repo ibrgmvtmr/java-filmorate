@@ -5,7 +5,6 @@ import ru.yandex.practicum.javafilmorate.model.User;
 import ru.yandex.practicum.javafilmorate.storage.interfaceStorage.UserStorage;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Component
 public class InMemoryUserStorage implements UserStorage {
@@ -30,7 +29,7 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public Optional<User> getUser(int userId){
+    public Optional<User> getUser(int userId) {
         return Optional.ofNullable(users.get(userId));
     }
 
