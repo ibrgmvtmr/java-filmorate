@@ -48,7 +48,7 @@ public class UserService {
         return inMemoryUserStorage.getUsers();
     }
 
-    public Optional<User> getUser(int userId) {
+    public Optional<User> getUser(Long userId) {
         if (inMemoryUserStorage.getUser(userId).isEmpty()) {
             String msg = "Пользователя с таким ID не существует";
             log.warn(msg);
@@ -58,7 +58,7 @@ public class UserService {
         return inMemoryUserStorage.getUser(userId);
     }
 
-    public void addFriend(int userId, int friendId) {
+    public void addFriend(Long userId, Long friendId) {
         if (inMemoryUserStorage.getUser(userId).isEmpty()) {
             String msg = "Пользователь с таким ID не найден";
             log.warn(msg);
@@ -73,7 +73,7 @@ public class UserService {
         log.debug("Друг добавлен");
     }
 
-    public void deleteFriend(int userId, int friendId) {
+    public void deleteFriend(Long userId, Long friendId) {
         if (inMemoryUserStorage.getUser(userId).isEmpty()) {
             String msg = "Пользователь с таким ID не найден";
             log.warn(msg);
@@ -93,7 +93,7 @@ public class UserService {
         log.debug("Friend Deleted");
     }
 
-    public List<User> getUsersFriends(int userId) {
+    public List<User> getUsersFriends(Long userId) {
         if (inMemoryUserStorage.getUser(userId).isEmpty()) {
             String msg = "Пользователь с таким ID не найден";
             log.warn(msg);
@@ -103,7 +103,7 @@ public class UserService {
         }
     }
 
-    public List<User> getCommonFriends(int userId, int friendId) {
+    public List<User> getCommonFriends(Long userId, Long friendId) {
         if (inMemoryUserStorage.getUser(userId).isEmpty()) {
             String msg = "Пользователь с таким ID не найден";
             log.warn(msg);

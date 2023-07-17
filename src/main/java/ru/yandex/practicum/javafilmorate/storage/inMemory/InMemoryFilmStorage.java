@@ -11,8 +11,8 @@ import java.util.stream.Collectors;
 @Component
 public class InMemoryFilmStorage implements FilmStorage {
 
-    private final Map<Integer, Film> films = new HashMap<>();
-    private int generatedId = 1;
+    private final Map<Long, Film> films = new HashMap<>();
+    private long generatedId = 1;
 
     @Override
     public void createFilm(Film film) {
@@ -28,7 +28,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public Optional<Film> getFilm(int filmId) {
+    public Optional<Film> getFilm(Long filmId) {
         return Optional.ofNullable(films.get(filmId));
     }
 
@@ -38,25 +38,20 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public void addLike(int filmId, int userId) {
+    public void addLike(Long filmId, Long userId) {
         films.get(filmId).getLikes().add(userId);
     }
 
     @Override
-    public void deleteLike(int filmId, int userId) {
+    public void deleteLike(Long filmId, Long userId) {
         films.get(filmId).getLikes().add(userId);
     }
 
     @Override
-    public List<Film> getTopFilms(String count) {
-        int maxSize;
-        if (count == null) {
-            maxSize = 10;
-        } else {
-            maxSize = Integer.parseInt(count);
-        }
-        return getFilms().stream()
+    public List<Film> getTopFilms(Long count) {
+        return getFilms()
+                .stream()
                 .sorted((film1, film2) -> film2.getLikes().size() - film1.getLikes().size())
-                .limit(maxSize).collect(Collectors.toList());
+                .limit(count).collect(Collectors.toList());
     }
 }

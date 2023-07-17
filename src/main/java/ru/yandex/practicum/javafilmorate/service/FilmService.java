@@ -59,7 +59,7 @@ public class FilmService {
         return inMemoryFilmStorage.getFilms();
     }
 
-    public Optional<Film> getFilm(int filmID) {
+    public Optional<Film> getFilm(Long filmID) {
         if (inMemoryFilmStorage.getFilm(filmID).isEmpty()) {
             String msg = "Фильм с таким ID не существует";
             log.warn(msg);
@@ -69,7 +69,7 @@ public class FilmService {
         return inMemoryFilmStorage.getFilm(filmID);
     }
 
-    public void addLike(int filmId, int userId) {
+    public void addLike(Long filmId, Long userId) {
         if (inMemoryFilmStorage.getFilm(filmId).isEmpty()) {
             String msg = "Фильм с таким ID не существует";
             log.warn(msg);
@@ -84,7 +84,7 @@ public class FilmService {
         log.debug("Лайк добавлен");
     }
 
-    public void deleteLike(int filmId, int userId) {
+    public void deleteLike(Long filmId, Long userId) {
         if (inMemoryFilmStorage.getFilm(filmId).isEmpty()) {
             String msg = "Фильм с таким ID не существует";
             log.warn(msg);
@@ -99,7 +99,7 @@ public class FilmService {
         log.debug("Лайк удалён");
     }
 
-    public List<Film> getTopFilms(String count) {
+    public List<Film> getTopFilms(Long count) {
         log.debug("Получение популярных фильмов");
         return inMemoryFilmStorage.getTopFilms(count);
     }

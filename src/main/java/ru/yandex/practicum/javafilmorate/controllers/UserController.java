@@ -36,30 +36,30 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<?> getFilm(@PathVariable String userId) {
-        return new ResponseEntity<>(userService.getUser(Integer.parseInt(userId)), HttpStatus.OK);
+    public ResponseEntity<?> getFilm(@PathVariable Long userId) {
+        return new ResponseEntity<>(userService.getUser(userId), HttpStatus.OK);
     }
 
     @PutMapping("/{userId}/friends/{friendId}")
-    public ResponseEntity<?> addFriend(@PathVariable String userId, @PathVariable String friendId) {
-        userService.addFriend(Integer.parseInt(userId), Integer.parseInt(friendId));
+    public ResponseEntity<?> addFriend(@PathVariable Long userId, @PathVariable Long friendId) {
+        userService.addFriend(userId, friendId);
         return new ResponseEntity<>("Пользователь успешно добавлен в друзья", HttpStatus.OK);
     }
 
     @DeleteMapping("/{userId}/friends/{friendId}")
-    public ResponseEntity<?> deleteFriend(@PathVariable String userId, @PathVariable String friendId) {
-        userService.deleteFriend(Integer.parseInt(userId), Integer.parseInt(friendId));
+    public ResponseEntity<?> deleteFriend(@PathVariable Long userId, @PathVariable Long friendId) {
+        userService.deleteFriend(userId, friendId);
         return new ResponseEntity<>("Пользователь успешно удалён из списка друзей", HttpStatus.OK);
     }
 
     @GetMapping("/{userId}/friends")
-    public ResponseEntity<?> getUsersFriends(@PathVariable String userId) {
-        return new ResponseEntity<>(userService.getUsersFriends(Integer.parseInt(userId)), HttpStatus.OK);
+    public ResponseEntity<?> getUsersFriends(@PathVariable Long userId) {
+        return new ResponseEntity<>(userService.getUsersFriends(userId), HttpStatus.OK);
     }
 
     @GetMapping("/{userId}/friends/common/{otherId}")
-    public ResponseEntity<?> getCommonFriends(@PathVariable String userId, @PathVariable String otherId) {
-        return new ResponseEntity<>(userService.getCommonFriends(Integer.parseInt(userId), Integer.parseInt(otherId)), HttpStatus.OK);
+    public ResponseEntity<?> getCommonFriends(@PathVariable Long userId, @PathVariable Long otherId) {
+        return new ResponseEntity<>(userService.getCommonFriends(userId, otherId), HttpStatus.OK);
     }
 
 }

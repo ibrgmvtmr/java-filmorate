@@ -37,25 +37,25 @@ public class FilmController {
     }
 
     @GetMapping("/{filmId}")
-    public ResponseEntity<?> getFilm(@PathVariable String filmId) {
-        return new ResponseEntity<>(filmService.getFilm(Integer.parseInt(filmId)), HttpStatus.OK);
+    public ResponseEntity<?> getFilm(@PathVariable Long filmId) {
+        return new ResponseEntity<>(filmService.getFilm(filmId), HttpStatus.OK);
     }
 
     @PutMapping("/{filmId}/like/{userId}")
-    public ResponseEntity<?> addLike(@PathVariable String filmId, @PathVariable String userId) {
-        filmService.addLike(Integer.parseInt(filmId), Integer.parseInt(userId));
+    public ResponseEntity<?> addLike(@PathVariable Long filmId, @PathVariable Long userId) {
+        filmService.addLike(filmId, userId);
         return new ResponseEntity<>("Лайк добавлен", HttpStatus.OK);
     }
 
     @DeleteMapping("/{filmId}/like/{userId}")
-    public ResponseEntity<?> deleteLike(@PathVariable String filmId, @PathVariable String userId) {
-        filmService.deleteLike(Integer.parseInt(filmId), Integer.parseInt(userId));
+    public ResponseEntity<?> deleteLike(@PathVariable Long filmId, @PathVariable Long userId) {
+        filmService.deleteLike(filmId, userId);
         return new ResponseEntity<>("Лайк удалён", HttpStatus.OK);
     }
 
     @GetMapping("/popular")
-    public ResponseEntity<?> getBestFilms(@RequestParam(required = false) String count) {
-        return new ResponseEntity<>(filmService.getTopFilms(count), HttpStatus.OK);
+    public ResponseEntity<?> getBestFilms(@RequestParam(defaultValue = "10") Long count) {
+        return new ResponseEntity<>(count, HttpStatus.OK);
     }
 
     @ExceptionHandler()

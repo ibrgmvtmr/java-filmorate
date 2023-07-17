@@ -13,13 +13,13 @@ public interface FilmStorage {
 
     void updateFilm(Film film);
 
-    Optional<Film> getFilm(int id);
+    Optional<Film> getFilm(Long id);
 
-    void addLike(int filmId, int userId);
+    void addLike(Long filmId, Long userId);
 
-    void deleteLike(int filmId, int userId);
+    void deleteLike(Long filmId, Long userId);
 
-    List<Film> getTopFilms(String count);
+    List<Film> getTopFilms(Long count);
 
 }
 
