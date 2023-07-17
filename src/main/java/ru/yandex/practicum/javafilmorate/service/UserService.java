@@ -84,11 +84,6 @@ public class UserService {
             log.warn(msg);
             throw new NotFoundException(msg);
         }
-        if (!inMemoryUserStorage.isUsersFriend(userId, friendId)) {
-            String msg = "Пользователь не найден в вашем листе друзей";
-            log.warn(msg);
-            throw new NotFoundException(msg);
-        }
         inMemoryUserStorage.deleteFriend(userId, friendId);
         log.debug("Friend Deleted");
     }
