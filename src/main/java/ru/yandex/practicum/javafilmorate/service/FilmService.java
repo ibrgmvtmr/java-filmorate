@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.javafilmorate.exceptions.NotFoundException;
+import ru.yandex.practicum.javafilmorate.exceptions.ValidationException;
 import ru.yandex.practicum.javafilmorate.model.Film;
 import ru.yandex.practicum.javafilmorate.storage.inMemory.InMemoryFilmStorage;
 import ru.yandex.practicum.javafilmorate.storage.inMemory.InMemoryUserStorage;
@@ -30,13 +31,13 @@ public class FilmService {
         if (film.getDuration() <= 0) {
             String msg = "Неправильная продолжительность фильма";
             log.warn(msg);
-            throw new IllegalStateException(msg);
+            throw new ValidationException(msg);
         }
 
         if (film.getReleaseDate().isBefore(firstFilmRelease)) {
             String msg = "Неверная дата релиза фильма";
             log.warn(msg);
-            throw new IllegalStateException(msg);
+            throw new ValidationException(msg);
         }
 
         inMemoryFilmStorage.createFilm(film);
