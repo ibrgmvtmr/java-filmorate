@@ -59,7 +59,7 @@ public class InMemoryUserStorage implements UserStorage {
         if (getUser(userId).isPresent()) {
             for (Long id : getUser(userId).get().getFriends()) {
                 if (users.get(friendId).getFriends().contains(id)) {
-                    commonFriends.add(users.get(userId));
+                    commonFriends.add(users.get(id));
                 }
             }
         }
