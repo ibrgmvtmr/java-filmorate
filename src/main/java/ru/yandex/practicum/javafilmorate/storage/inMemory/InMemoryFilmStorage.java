@@ -49,9 +49,14 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public List<Film> getTopFilms(Long count) {
-        return getFilms()
-                .stream()
+        long maxSize;
+        if (count == null) {
+            maxSize = 10;
+        } else {
+            maxSize = count;
+        }
+        return getFilms().stream()
                 .sorted((film1, film2) -> film2.getLikes().size() - film1.getLikes().size())
-                .limit(count).collect(Collectors.toList());
+                .limit(maxSize).collect(Collectors.toList());
     }
 }
