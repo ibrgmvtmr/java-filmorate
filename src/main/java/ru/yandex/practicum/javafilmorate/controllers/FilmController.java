@@ -54,8 +54,8 @@ public class FilmController {
     }
 
     @GetMapping("/popular")
-    public ResponseEntity<?> getBestFilms(@RequestParam(defaultValue = "10") Long count) {
-        return new ResponseEntity<>(count, HttpStatus.OK);
+    public ResponseEntity<?> getBestFilms(@RequestParam(defaultValue = "10") String count) {
+        return new ResponseEntity<>(filmService.getTopFilms(count), HttpStatus.OK);
     }
 
     @ExceptionHandler()

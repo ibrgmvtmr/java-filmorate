@@ -99,7 +99,7 @@ public class FilmService {
         log.debug("Лайк удалён");
     }
 
-    public List<Film> getTopFilms(Long count) {
+    public List<Film> getTopFilms(String count) {
         log.debug("Получение популярных фильмов");
         return inMemoryFilmStorage.getTopFilms(count);
     }
