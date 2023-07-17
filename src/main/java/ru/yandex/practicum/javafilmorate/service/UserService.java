@@ -5,10 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.javafilmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.javafilmorate.model.User;
-import ru.yandex.practicum.javafilmorate.storage.inMemory.InMemoryUserStorage;
+import ru.yandex.practicum.javafilmorate.storage.inmemory.InMemoryUserStorage;
 
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -33,7 +32,7 @@ public class UserService {
         if (user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());
         }
-        if (inMemoryUserStorage.getUser(user.getId()).isEmpty()) {
+        if (inMemoryUserStorage.getUser(user.getId()) == null) {
             String msg = "Пользователь с таким ID не найден";
             log.warn(msg);
             throw new NotFoundException(msg);
@@ -48,8 +47,8 @@ public class UserService {
         return inMemoryUserStorage.getUsers();
     }
 
-    public Optional<User> getUser(Long userId) {
-        if (inMemoryUserStorage.getUser(userId).isEmpty()) {
+    public User getUser(Integer userId) {
+        if (inMemoryUserStorage.getUser(userId) == null) {
             String msg = "Пользователя с таким ID не существует";
             log.warn(msg);
             throw new NotFoundException(msg);
@@ -58,38 +57,20 @@ public class UserService {
         return inMemoryUserStorage.getUser(userId);
     }
 
-    public void addFriend(Long userId, Long friendId) {
-        if (inMemoryUserStorage.getUser(userId).isEmpty()) {
-            String msg = "Пользователь с таким ID не найден";
-            log.warn(msg);
-            throw new NotFoundException(msg);
-        }
-        if (inMemoryUserStorage.getUser(friendId).isEmpty()) {
-            String msg = "ID пользователя которого вы хотите добавить в друзья не существует";
-            log.warn(msg);
-            throw new NotFoundException(msg);
-        }
+    public void addFriend(Integer userId, Integer friendId) {
+        userIdChecker(userId, friendId);
         inMemoryUserStorage.addFriend(userId, friendId);
         log.debug("Друг добавлен");
     }
 
-    public void deleteFriend(Long userId, Long friendId) {
-        if (inMemoryUserStorage.getUser(userId).isEmpty()) {
-            String msg = "Пользователь с таким ID не найден";
-            log.warn(msg);
-            throw new NotFoundException(msg);
-        }
-        if (inMemoryUserStorage.getUser(friendId).isEmpty()) {
-            String msg = "ID пользователя которого вы хотите добавить в друзья не существует";
-            log.warn(msg);
-            throw new NotFoundException(msg);
-        }
+    public void deleteFriend(Integer userId, Integer friendId) {
+        userIdChecker(userId, friendId);
         inMemoryUserStorage.deleteFriend(userId, friendId);
         log.debug("Friend Deleted");
     }
 
-    public List<User> getUsersFriends(Long userId) {
-        if (inMemoryUserStorage.getUser(userId).isEmpty()) {
+    public List<User> getUsersFriends(Integer userId) {
+        if (inMemoryUserStorage.getUser(userId) == null) {
             String msg = "Пользователь с таким ID не найден";
             log.warn(msg);
             throw new NotFoundException(msg);
@@ -98,18 +79,22 @@ public class UserService {
         }
     }
 
-    public List<User> getCommonFriends(Long userId, Long friendId) {
-        if (inMemoryUserStorage.getUser(userId).isEmpty()) {
-            String msg = "Пользователь с таким ID не найден";
-            log.warn(msg);
-            throw new NotFoundException(msg);
-        }
-        if (inMemoryUserStorage.getUser(friendId).isEmpty()) {
-            String msg = "Пользователь с таким ID не найден";
-            log.warn(msg);
-            throw new NotFoundException(msg);
-        }
+    public List<User> getCommonFriends(Integer userId, Integer friendId) {
+        userIdChecker(userId, friendId);
         log.debug("получение общих знакомых");
         return inMemoryUserStorage.getCommonFriends(userId, friendId);
+    }
+
+    public void userIdChecker(Integer userId, Integer friendId) {
+        if (inMemoryUserStorage.getUser(userId) == null) {
+            String msg = "Пользователь с таким ID не найден";
+            log.warn(msg);
+            throw new NotFoundException(msg);
+        }
+        if (inMemoryUserStorage.getUser(friendId) == null) {
+            String msg = "Пользователь с таким ID не найден";
+            log.warn(msg);
+            throw new NotFoundException(msg);
+        }
     }
 }

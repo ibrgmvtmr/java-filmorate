@@ -36,29 +36,29 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<?> getFilm(@PathVariable Long userId) {
+    public ResponseEntity<?> getFilm(@PathVariable Integer userId) {
         return new ResponseEntity<>(userService.getUser(userId), HttpStatus.OK);
     }
 
     @PutMapping("/{userId}/friends/{friendId}")
-    public ResponseEntity<?> addFriend(@PathVariable Long userId, @PathVariable Long friendId) {
+    public ResponseEntity<?> addFriend(@PathVariable Integer userId, @PathVariable Integer friendId) {
         userService.addFriend(userId, friendId);
         return new ResponseEntity<>("Пользователь успешно добавлен в друзья", HttpStatus.OK);
     }
 
     @DeleteMapping("/{userId}/friends/{friendId}")
-    public ResponseEntity<?> deleteFriend(@PathVariable Long userId, @PathVariable Long friendId) {
+    public ResponseEntity<?> deleteFriend(@PathVariable Integer userId, @PathVariable Integer friendId) {
         userService.deleteFriend(userId, friendId);
         return new ResponseEntity<>("Пользователь успешно удалён из списка друзей", HttpStatus.OK);
     }
 
     @GetMapping("/{userId}/friends")
-    public ResponseEntity<?> getUsersFriends(@PathVariable Long userId) {
+    public ResponseEntity<?> getUsersFriends(@PathVariable Integer userId) {
         return new ResponseEntity<>(userService.getUsersFriends(userId), HttpStatus.OK);
     }
 
     @GetMapping("/{userId}/friends/common/{otherId}")
-    public ResponseEntity<?> getCommonFriends(@PathVariable Long userId, @PathVariable Long otherId) {
+    public ResponseEntity<?> getCommonFriends(@PathVariable Integer userId, @PathVariable Integer otherId) {
         return new ResponseEntity<>(userService.getCommonFriends(userId, otherId), HttpStatus.OK);
     }
 

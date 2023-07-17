@@ -15,7 +15,7 @@ import java.util.Set;
 public class User {
 
     @PositiveOrZero
-    private long id;
+    private Integer id;
 
     private String name;
 
@@ -30,5 +30,5 @@ public class User {
     @PastOrPresent(message = "Некорректная дата рождения")
     private LocalDate birthday;
 
-    private Set<Long> friends = new HashSet<>();
+    private Set<Integer> friends = new HashSet<>();
 }

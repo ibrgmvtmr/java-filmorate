@@ -1,8 +1,8 @@
-package ru.yandex.practicum.javafilmorate.storage.inMemory;
+package ru.yandex.practicum.javafilmorate.storage.inmemory;
 
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.javafilmorate.model.Film;
-import ru.yandex.practicum.javafilmorate.storage.interfaceStorage.FilmStorage;
+import ru.yandex.practicum.javafilmorate.storage.interfacestorages.FilmStorage;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -11,8 +11,8 @@ import java.util.stream.Collectors;
 @Component
 public class InMemoryFilmStorage implements FilmStorage {
 
-    private final Map<Long, Film> films = new HashMap<>();
-    private long generatedId = 1;
+    private final Map<Integer, Film> films = new HashMap<>();
+    private int generatedId = 1;
 
     @Override
     public void createFilm(Film film) {
@@ -28,8 +28,8 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public Optional<Film> getFilm(Long filmId) {
-        return Optional.ofNullable(films.get(filmId));
+    public Film getFilm(Integer filmId) {
+        return films.get(filmId);
     }
 
     @Override
@@ -38,23 +38,19 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public void addLike(Long filmId, Long userId) {
+    public void addLike(Integer filmId, Integer userId) {
         films.get(filmId).getLikes().add(userId);
     }
 
     @Override
-    public void deleteLike(Long filmId, Long userId) {
+    public void deleteLike(Integer filmId, Integer userId) {
         films.get(filmId).getLikes().add(userId);
     }
 
     @Override
-    public List<Film> getTopFilms(String count) {
-        long maxSize;
-        if (count == null) {
-            maxSize = 10;
-        } else {
-            maxSize = Long.parseLong(count);
-        }
+    public List<Film> getTopFilms(Integer count) {
+        int maxSize;
+        maxSize = Objects.requireNonNullElse(count, 10);
         return getFilms().stream()
                 .sorted((film1, film2) -> film2.getLikes().size() - film1.getLikes().size())
                 .limit(maxSize).collect(Collectors.toList());
