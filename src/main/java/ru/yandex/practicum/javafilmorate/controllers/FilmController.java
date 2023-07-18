@@ -1,48 +1,66 @@
 package ru.yandex.practicum.javafilmorate.controllers;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.javafilmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.javafilmorate.model.Film;
+import ru.yandex.practicum.javafilmorate.service.FilmService;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Slf4j
 @RestController
 @RequestMapping("/films")
+@RequiredArgsConstructor
 public class FilmController {
 
-    private final Map<Integer, Film> films = new HashMap<>();
-    private int generatedId = 1;
+    private final FilmService filmService;
 
     @PostMapping
-    public Film createFilm(@Valid @RequestBody Film film) {
-        log.info("Добавление нового фильма: {}", film);
-        film.setId(generatedId++);
-        log.info("Фильм успешно добавлен: {}", film);
-        films.put(film.getId(), film);
-        return film;
+    public ResponseEntity<?> createFilm(@RequestBody @Valid Film film) {
+        filmService.createFilm(film);
+        return new ResponseEntity<>(film, HttpStatus.CREATED);
     }
 
     @PutMapping
-    public Film updateFilm(@Valid @RequestBody Film film) {
-        if (films.containsKey(film.getId())) {
-            log.info("Обновление фильма");
-            films.put(film.getId(), film);
-            return film;
-        } else {
-            log.warn("Валидация фильма не прошла");
-            throw new NotFoundException("Фильм не найден");
-        }
+    public  ResponseEntity<?> updateFilm(@Valid @RequestBody Film film) {
+        filmService.updateFilm(film);
+        return new ResponseEntity<>(film, HttpStatus.OK);
     }
 
-    @GetMapping
-    public List<Film> getFilms() {
-        log.info("Получение всех фильмов");
-        return new ArrayList<>(films.values());
+    @GetMapping()
+    public ResponseEntity<?> getFilms() {
+        return new ResponseEntity<>(filmService.getAllFilms(), HttpStatus.OK);
+    }
+
+    @GetMapping("/{filmId}")
+    public ResponseEntity<?> getFilm(@PathVariable Integer filmId) {
+        return new ResponseEntity<>(filmService.getFilm(filmId), HttpStatus.OK);
+    }
+
+    @PutMapping("/{filmId}/like/{userId}")
+    public ResponseEntity<?> addLike(@PathVariable Integer filmId, @PathVariable Integer userId) {
+        filmService.addLike(filmId, userId);
+        return new ResponseEntity<>("Лайк добавлен", HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{filmId}/like/{userId}")
+    public ResponseEntity<?> deleteLike(@PathVariable Integer filmId, @PathVariable Integer userId) {
+        filmService.deleteLike(filmId, userId);
+        return new ResponseEntity<>("Лайк удалён", HttpStatus.OK);
+    }
+
+    @GetMapping("/popular")
+    public ResponseEntity<?> getBestFilms(@RequestParam(defaultValue = "10") int count) {
+        return new ResponseEntity<>(filmService.getTopFilms(count), HttpStatus.OK);
+    }
+
+    @ExceptionHandler()
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> handleNotFoundException(final IllegalStateException e) {
+        return Map.of("Error", e.getMessage());
     }
 }

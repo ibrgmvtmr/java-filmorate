@@ -8,15 +8,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.yandex.practicum.javafilmorate.controllers.UserController;
-import ru.yandex.practicum.javafilmorate.model.User;
+import ru.yandex.practicum.javafilmorate.storage.inmemory.InMemoryUserStorage;
 
-import java.time.LocalDate;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -26,11 +21,11 @@ public class UserControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private UserController userController;
+    private InMemoryUserStorage inMemoryUserStorage;
 
     @Test
     @DisplayName("Добавление нового пользователя - login : null")
-    public void methodPost_NewUserValidFalse_LoginNullTest() throws Exception {
+    public void methodPost_NewUserInvalid_LoginNullTest() throws Exception {
         mockMvc.perform(post("/users")
                         .content(
                                 "{" +
@@ -45,7 +40,7 @@ public class UserControllerTest {
 
     @Test
     @DisplayName("Добавление нового пользователя - email : null")
-    public void methodPost_NewUserValidFalse_EmailNullTest() throws Exception {
+    public void methodPost_NewUserInvalid_EmailNullTest() throws Exception {
 
         mockMvc.perform(post("/users")
                         .content(
@@ -61,11 +56,11 @@ public class UserControllerTest {
 
     @Test
     @DisplayName("Добавление нового пользователя - email : incorrect")
-    public void methodPost_NewUserValidFalse_IncorrectEmailTest() throws Exception {
+    public void methodPost_NewUserInvalid_IncorrectEmailTest() throws Exception {
         mockMvc.perform(post("/users")
                         .content(
                                 "{" +
-                                        "\"email\":\"incorrect\"," +
+                                        "\"email\":\"incorrect.email\"," +
                                         "\"name\":\"test\"," +
                                         "\"birthday\":\"2023-01-01\"," +
                                         "\"login\":\"test\"" +
@@ -76,22 +71,8 @@ public class UserControllerTest {
     }
 
     @Test
-    @DisplayName("Добавление нового пользователя - name : blank")
-    public void testCreateUser_WithBlankName() throws Exception {
-        User user = new User(1, "test@example.com", "testlogin", "", LocalDate.now());
-        User expectedUser = new User(1, "test@example.com", "testlogin", "testlogin", LocalDate.now());
-
-        when(userController.createUser(any(User.class))).thenReturn(expectedUser);
-
-        mockMvc.perform(post("/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"id\":1,\"email\":\"test@example.com\",\"login\":\"testlogin\",\"name\":\"\",\"birthday\":\"2000-01-01\"}"))
-                .andExpect(status().isOk());
-    }
-
-    @Test
     @DisplayName("Добавление нового пользователя - birthday : null")
-    public void methodPost_NewUserValidFalse_BirthdayNullTest() throws Exception {
+    public void methodPost_NewUserInvalid_BirthdayNullTest() throws Exception {
         mockMvc.perform(post("/users")
                         .content(
                                 "{" +
@@ -106,7 +87,7 @@ public class UserControllerTest {
 
     @Test
     @DisplayName("Добавление нового пользователя")
-    public void methodPost_NewUserValidTrue() throws Exception {
+    public void methodPost_NewUserValidTest() throws Exception {
         mockMvc.perform(post("/users")
                         .content(
                                 "{" +
@@ -117,6 +98,6 @@ public class UserControllerTest {
                                         "}"
                         )
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().is(201));
     }
 }

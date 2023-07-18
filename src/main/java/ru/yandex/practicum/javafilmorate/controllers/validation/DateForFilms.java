@@ -1,6 +1,5 @@
 package ru.yandex.practicum.javafilmorate.controllers.validation;
 
-import ru.yandex.practicum.javafilmorate.controllers.validation.DateForFilmsValid;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

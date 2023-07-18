@@ -8,5 +8,4 @@ public class JavaFilmorateApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(JavaFilmorateApplication.class, args);
 	}
-
 }
