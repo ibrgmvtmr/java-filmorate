@@ -8,7 +8,9 @@ import ru.yandex.practicum.javafilmorate.controllers.validation.DateForFilms;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -33,6 +35,10 @@ public class Film {
 
     @Min(value = 1, message = "Неправильная продолжительность фильма")
     private int duration;
+
+    private MPA mpa = new MPA();
+
+    private List<Genres> genres = new ArrayList<>();
 
     private Set<Integer> likes = new HashSet<>();
 }
