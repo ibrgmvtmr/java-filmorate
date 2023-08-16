@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.yandex.practicum.javafilmorate.model.Mpa;
 import ru.yandex.practicum.javafilmorate.service.MpaService;
 
 import javax.validation.Valid;
@@ -32,6 +31,4 @@ public class MpaController {
     public ResponseEntity<?> getMpas() {
         return new ResponseEntity<>(mpaService.getMpas(), HttpStatus.OK);
     }
-
-
 }
