@@ -69,7 +69,7 @@ public class UserService {
         List<Integer> friendList = new ArrayList<>();
         User user = userDbStorage.getUser(useId);
         for (Integer id: user.getFriends()) {
-            if(id != null) {
+            if (id != null) {
                 friendList.add(id);
             }
         }

@@ -31,7 +31,7 @@ public class FilmService {
     public Film create(Film film) {
         Film newFilm = filmsStorage.createFilm(film);
         log.debug("Фильм с id = {} добавлен в бд", film.getId());
-        if(film.getGenres() != null) {
+        if (film.getGenres() != null) {
             newFilm.setGenres(filmsGenresStorage.setGenresFilm(film.getId(), new HashSet<>(film.getGenres())));
         }
 
@@ -39,10 +39,10 @@ public class FilmService {
     }
 
     public Film update(Film film) {
-        if(film.getId() != null) {
+        if (film.getId() != null) {
             Film updatedFilm = filmsStorage.updateFilm(film);
             updatedFilm.setMpa(mpaStorage.getMpa(film.getMpa().getId()));
-            if(film.getGenres() != null) {
+            if (film.getGenres() != null) {
                 filmsGenresStorage.delete(film.getId());
                 updatedFilm.setGenres(filmsGenresStorage.setGenresFilm(film.getId(), new HashSet<>(film.getGenres())));
             }

@@ -52,7 +52,7 @@ public class FilmsDbStorage implements FilmsStorage {
             ps.setString(2, film.getDescription());
             ps.setDate(3, java.sql.Date.valueOf(film.getReleaseDate()));
             ps.setInt(4, film.getDuration());
-            if(film.getMpa() != null) {
+            if (film.getMpa() != null) {
                 ps.setInt(5, film.getMpa().getId());
             }
             return ps;

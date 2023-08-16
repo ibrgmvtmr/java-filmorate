@@ -22,7 +22,7 @@ public class GenreService {
     }
 
     public Genre update(Genre genre) {
-        if(genreDbStorage.getGenre(genre.getId()) != null) {
+        if (genreDbStorage.getGenre(genre.getId()) != null) {
             log.info("Жанр с id '{}' обновлен", genre.getId());
             return genreDbStorage.update(genre);
         } else {
