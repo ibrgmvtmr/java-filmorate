@@ -36,7 +36,7 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<?> getFilm(@PathVariable Integer userId) {
+    public ResponseEntity<?> getUser(@PathVariable Integer userId) {
         return new ResponseEntity<>(userService.getUser(userId), HttpStatus.OK);
     }
 

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.javafilmorate.model.User;
 import ru.yandex.practicum.javafilmorate.storage.db.userdb.UserStorage;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,21 +30,17 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public User create(User user) {
+        final String sqlQuery = "INSERT INTO USERS (EMAIL, LOGIN, NAME, BIRTHDAY) VALUES ( ?, ?, ?, ?)";
         KeyHolder generatedId = new GeneratedKeyHolder();
-        String sqlQuery = "INSERT INTO USERS\n" +
-                          "(NAME, LOGIN, EMAIL, BIRTHDAY)\n" +
-                          "VALUES(?,?,?,?)";
-        jdbcTemplate.update(con -> {
-            PreparedStatement ps = con.prepareStatement(
-                    sqlQuery, new String[]{"USER_ID"}
-            );
-            ps.setString(1, user.getName());
-            ps.setString(2, user.getLogin());
-            ps.setString(3, user.getEmail());
-            ps.setDate(4, java.sql.Date.valueOf(user.getBirthday()));
-            return ps;
-        }, generatedId);
 
+        jdbcTemplate.update(connection -> {
+            final PreparedStatement stmt = connection.prepareStatement(sqlQuery, new String[]{"USER_ID"});
+            stmt.setString(1, user.getEmail());
+            stmt.setString(2, user.getLogin());
+            stmt.setString(3, user.getName());
+            stmt.setDate(4, Date.valueOf(user.getBirthday()));
+            return stmt;
+        }, generatedId);
         user.setId(Objects.requireNonNull(generatedId.getKey()).intValue());
         return user;
     }
@@ -69,8 +66,7 @@ public class UserDbStorage implements UserStorage {
     @Override
     public User getUser(Integer userId) {
         String sqlQuery = "SELECT * FROM USERS WHERE USER_ID = ?";
-        return jdbcTemplate.query(sqlQuery, (rs, rowNum) -> mpaRowToUser(rs)).stream()
-                .findAny().orElse(null);
+        return jdbcTemplate.queryForObject(sqlQuery, (rs, rowNum) -> mpaRowToUser(rs), userId);
     }
 
     public User mpaRowToUser(ResultSet resultSet) throws SQLException {
