@@ -52,7 +52,7 @@ public class UserService {
     }
 
     public void addFriend(Integer userId, Integer friendId) {
-        friendshipStorage.addFriend(userId, userId);
+        friendshipStorage.addFriend(userId, friendId);
         log.debug("Друг добавлен");
     }
 

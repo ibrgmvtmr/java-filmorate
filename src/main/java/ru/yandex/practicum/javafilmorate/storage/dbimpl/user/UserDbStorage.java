@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.javafilmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.javafilmorate.model.User;
 import ru.yandex.practicum.javafilmorate.storage.db.userdb.UserStorage;
 
@@ -50,9 +51,11 @@ public class UserDbStorage implements UserStorage {
         String sqlQuery = "UPDATE USERS\n" +
                 "SET NAME=?, LOGIN=?, EMAIL=?, BIRTHDAY=?\n" +
                 "WHERE USER_ID=?;";
-        jdbcTemplate.update(sqlQuery, user.getName(), user.getLogin(),
-                            user.getEmail(), user.getBirthday(), user.getId());
-        return user;
+        if (jdbcTemplate.update(sqlQuery, user.getEmail(), user.getLogin(), user.getName(), user.getBirthday(),
+                user.getId()) != 0) {
+            return user;
+        }
+        throw new NotFoundException("Пользователь с таким Id не найден");
     }
 
     @Override
