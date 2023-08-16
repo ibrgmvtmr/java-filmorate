@@ -39,7 +39,7 @@ public class UserService {
     }
 
     public User getUser(Integer userId) {
-        if(userDbStorage.getUser(userId) == null) {
+        if (userDbStorage.getUser(userId) == null) {
             log.debug("Пользователь с id = {} не существует", userId);
             throw new NotFoundException("Пользователь с указанным id не найден!");
         }
