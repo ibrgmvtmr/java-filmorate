@@ -11,9 +11,9 @@ import java.util.Set;
 @Component
 public class LikesDbStorage implements LikesStorage {
 
-    @Autowired
     private final JdbcTemplate jdbcTemplate;
 
+    @Autowired
     public LikesDbStorage(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
@@ -21,7 +21,7 @@ public class LikesDbStorage implements LikesStorage {
     @Override
     public void addLike(Integer userId, Integer filmId) {
         String sqlQuery = "INSERT INTO LIKES(USER_ID, FILM_ID)\n" +
-                "VALUES(?,?);";
+                "VALUES(?, ?);";
         jdbcTemplate.update(sqlQuery, userId, filmId);
     }
 
