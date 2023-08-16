@@ -19,6 +19,7 @@ public class FilmsGenresDbStorage implements FilmsGenresStorage {
     public FilmsGenresDbStorage(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
+
     @Override
     public void create(Integer filmId, Integer genreId) {
         String sql = "INSERT INTO FILM_GENRES (FILM_ID, GENRE_ID) VALUES(?, ?)";
