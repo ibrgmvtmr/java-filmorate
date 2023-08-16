@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.yandex.practicum.javafilmorate.controllers.validation.DateForFilms;
+import ru.yandex.practicum.javafilmorate.exceptions.validation.DateForFilms;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
@@ -36,9 +36,9 @@ public class Film {
     @Min(value = 1, message = "Неправильная продолжительность фильма")
     private int duration;
 
-    private MPA mpa = new MPA();
+    private Mpa mpa = new Mpa();
 
-    private List<Genres> genres = new ArrayList<>();
+    private List<Genre> genres = new ArrayList<>();
 
     private Set<Integer> likes = new HashSet<>();
 }

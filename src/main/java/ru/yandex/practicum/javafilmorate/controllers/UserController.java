@@ -20,13 +20,13 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<?> create(@Valid @RequestBody User user) {
-        userService.createUser(user);
+        userService.create(user);
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
     @PutMapping
     public ResponseEntity<?> updateUser(@Valid @RequestBody User user) {
-        userService.updateUser(user);
+        userService.update(user);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
@@ -48,13 +48,13 @@ public class UserController {
 
     @DeleteMapping("/{userId}/friends/{friendId}")
     public ResponseEntity<?> deleteFriend(@PathVariable Integer userId, @PathVariable Integer friendId) {
-        userService.deleteFriend(userId, friendId);
+        userService.removeFriend(userId, friendId);
         return new ResponseEntity<>("Пользователь успешно удалён из списка друзей", HttpStatus.OK);
     }
 
     @GetMapping("/{userId}/friends")
     public ResponseEntity<?> getUsersFriends(@PathVariable Integer userId) {
-        return new ResponseEntity<>(userService.getUsersFriends(userId), HttpStatus.OK);
+        return new ResponseEntity<>(userService.getUserFriends(userId), HttpStatus.OK);
     }
 
     @GetMapping("/{userId}/friends/common/{otherId}")
