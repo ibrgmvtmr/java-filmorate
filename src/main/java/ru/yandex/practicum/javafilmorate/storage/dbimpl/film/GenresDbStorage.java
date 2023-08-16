@@ -27,7 +27,7 @@ public class GenresDbStorage implements GenresStorage {
 
     @Override
     public Genre create(Genre genre) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
+        KeyHolder generatedId = new GeneratedKeyHolder();
         String sqlQuery = "INSERT INTO GENRES\n" +
                           "(NAME)\n" +
                           "VALUES(?);";
@@ -36,10 +36,9 @@ public class GenresDbStorage implements GenresStorage {
                     .prepareStatement(sqlQuery, new String[]{"GENRE_ID"});
             ps.setString(1, genre.getName());
             return ps;
-        }, keyHolder);
+        }, generatedId);
 
-        Integer id = (Integer) keyHolder.getKey();
-        genre.setId(id);
+        genre.setId(Objects.requireNonNull(generatedId.getKey()).intValue());
         return genre;
     }
 

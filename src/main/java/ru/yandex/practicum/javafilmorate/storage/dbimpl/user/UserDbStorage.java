@@ -29,7 +29,7 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public User create(User user) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
+        KeyHolder generatedId = new GeneratedKeyHolder();
         String sqlQuery = "INSERT INTO USERS\n" +
                           "(NAME, LOGIN, EMAIL, BIRTHDAY)\n" +
                           "VALUES(?,?,?,?)";
@@ -42,10 +42,10 @@ public class UserDbStorage implements UserStorage {
             ps.setString(3, user.getEmail());
             ps.setDate(4, java.sql.Date.valueOf(user.getBirthday()));
             return ps;
-        }, keyHolder);
-         Integer id = (Integer) keyHolder.getKey();
-         user.setId(id);
-         return user;
+        }, generatedId);
+
+        user.setId(Objects.requireNonNull(generatedId.getKey()).intValue());
+        return user;
     }
 
     @Override

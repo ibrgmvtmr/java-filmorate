@@ -42,7 +42,7 @@ public class FilmsDbStorage implements FilmsStorage {
 
     @Override
     public Film createFilm(Film film) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
+        KeyHolder generatedId = new GeneratedKeyHolder();
         String sqlQuery = "INSERT INTO Films (NAME, DESCRIPTION, RELEASE_DATE, DURATION, MPA_ID)\n" +
                 " VALUES (?, ?, ?, ?, ?)";
         jdbcTemplate.update(connection -> {
@@ -56,10 +56,10 @@ public class FilmsDbStorage implements FilmsStorage {
                 ps.setInt(5, film.getMpa().getId());
             }
             return ps;
-        }, keyHolder);
+        }, generatedId);
 
-        Integer id = (Integer) keyHolder.getKey();
-        film.setId(id);
+
+        film.setId(Objects.requireNonNull(generatedId.getKey()).intValue());
         return film;
     }
 
