@@ -8,6 +8,7 @@ import ru.yandex.practicum.javafilmorate.storage.db.userdb.FriendshipStorage;
 import ru.yandex.practicum.javafilmorate.storage.dbimpl.user.UserDbStorage;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 @Slf4j
@@ -65,8 +66,12 @@ public class UserService {
         return friendshipStorage.getCommonFriends(userId, friendId);
     }
 
-    public Set<Integer> getUserFriends(Integer userId) {
+    public Set<User> getUserFriends(Integer userId) {
         log.debug("Запрос на получение друзей для пользователя с ID: {}", userId);
-        return userDbStorage.readUserFriends(userId);
+        Set<User> friends = new HashSet<>();
+        for(Integer id: userDbStorage.readUserFriends(userId)) {
+            friends.add(userDbStorage.getUser(id));
+        }
+        return friends;
     }
 }
