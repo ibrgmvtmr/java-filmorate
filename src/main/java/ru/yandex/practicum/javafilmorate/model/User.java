@@ -12,7 +12,6 @@ import java.util.Set;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
 public class User {
 
@@ -22,6 +21,7 @@ public class User {
     private String name;
 
     @NotBlank(message = "Отсутствует email")
+    @Email(message = "Некорректный email")
     private String email;
 
     @NotBlank(message = "логин пуст")
@@ -32,4 +32,21 @@ public class User {
     private LocalDate birthday;
 
     private Set<Integer> friends = new HashSet<>();
+
+    public User(Integer id, String name, String email, String login, LocalDate birthday) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.login = login;
+        this.birthday = birthday;
+    }
+
+    public User(Integer id, String name, String email, String login, LocalDate birthday, Set<Integer> friends) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.login = login;
+        this.birthday = birthday;
+        this.friends = friends;
+    }
 }
