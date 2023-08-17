@@ -69,7 +69,7 @@ public class UserService {
     public Set<User> getUserFriends(Integer userId) {
         log.debug("Запрос на получение друзей для пользователя с ID: {}", userId);
         Set<User> friends = new HashSet<>();
-        for(Integer id: userDbStorage.readUserFriends(userId)) {
+        for (Integer id: userDbStorage.readUserFriends(userId)) {
             friends.add(userDbStorage.getUser(id));
         }
         return friends;
