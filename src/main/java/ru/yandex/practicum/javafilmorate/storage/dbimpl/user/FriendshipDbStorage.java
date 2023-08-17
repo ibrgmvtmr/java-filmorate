@@ -32,7 +32,7 @@ public class FriendshipDbStorage implements FriendshipStorage {
                 "(USER_ID, FRIEND_ID)\n" +
                 "VALUES(?, ?)";
         try {
-            jdbcTemplate.update(sqlQuery, userStorage.getUser(userId).getId() , userStorage.getUser(friendId).getId());
+            jdbcTemplate.update(sqlQuery, userStorage.getUser(userId).getId(), userStorage.getUser(friendId).getId());
         } catch (DuplicateKeyException e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
