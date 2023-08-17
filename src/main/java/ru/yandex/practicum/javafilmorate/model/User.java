@@ -22,7 +22,6 @@ public class User {
     private String name;
 
     @NotBlank(message = "Отсутствует email")
-    @Email(message = "Некорректный email")
     private String email;
 
     @NotBlank(message = "логин пуст")

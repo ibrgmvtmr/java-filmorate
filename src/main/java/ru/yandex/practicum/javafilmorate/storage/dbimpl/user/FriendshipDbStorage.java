@@ -6,8 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
-import ru.yandex.practicum.javafilmorate.model.User;
 import org.springframework.jdbc.core.JdbcTemplate;
+import ru.yandex.practicum.javafilmorate.model.User;
 import ru.yandex.practicum.javafilmorate.storage.db.userdb.FriendshipStorage;
 import ru.yandex.practicum.javafilmorate.storage.db.userdb.UserStorage;
 
@@ -40,12 +40,12 @@ public class FriendshipDbStorage implements FriendshipStorage {
 
     @Override
     public List<User> getCommonFriends(Integer userId, Integer friendId) {
-        String sqlQuery = "SELECT u.*\n" +
-                "FROM USERS u\n" +
-                "JOIN FRIENDSHIPS f1 ON u.user_id = f1.friend_id\n" +
-                "JOIN FRIENDSHIPS f2 ON f1.user_id = f2.friend_id\n" +
-                "WHERE f1.user_id = ? AND f2.user_id = ?";
-        return jdbcTemplate.query(sqlQuery, new BeanPropertyRowMapper<>(User.class), userId, friendId);
+        String sql = "SELECT * \n" +
+                "FROM USERS u \n" +
+                "WHERE u.USER_ID \n" +
+                "IN (SELECT FRIEND_ID FROM FRIENDSHIPS f  WHERE user_id = ?)\n" +
+                "AND USER_ID IN (SELECT FRIEND_ID FROM FRIENDSHIPS WHERE user_id = ?);";
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(User.class), userId, friendId);
     }
 
     @Override
