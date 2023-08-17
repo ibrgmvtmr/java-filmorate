@@ -51,11 +51,13 @@ public class UserDbStorage implements UserStorage {
         String sqlQuery = "UPDATE USERS\n" +
                 "SET NAME=?, LOGIN=?, EMAIL=?, BIRTHDAY=?\n" +
                 "WHERE USER_ID=?;";
-        if (jdbcTemplate.update(sqlQuery, user.getEmail(), user.getLogin(), user.getName(), user.getBirthday(),
-                user.getId()) != 0) {
+        int rowsUpdated = jdbcTemplate.update(sqlQuery, user.getEmail(), user.getLogin(), user.getName(), user.getBirthday(), user.getId());
+
+        if (rowsUpdated > 0) {
             return user;
+        } else {
+            throw new NotFoundException("Пользователь с таким Id не найден");
         }
-        throw new NotFoundException("Пользователь с таким Id не найден");
     }
 
     @Override
@@ -69,7 +71,12 @@ public class UserDbStorage implements UserStorage {
     @Override
     public User getUser(Integer userId) {
         String sqlQuery = "SELECT * FROM USERS WHERE USER_ID = ?";
-        return jdbcTemplate.queryForObject(sqlQuery, (rs, rowNum) -> mpaRowToUser(rs), userId);
+
+        try {
+            return jdbcTemplate.queryForObject(sqlQuery, (rs, rowNum) -> mpaRowToUser(rs), userId);
+        } catch (Throwable throwable) {
+            throw new NotFoundException("User с таким id не найден");
+        }
     }
 
     public User mpaRowToUser(ResultSet resultSet) throws SQLException {

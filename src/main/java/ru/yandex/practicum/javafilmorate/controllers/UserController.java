@@ -1,7 +1,7 @@
 package ru.yandex.practicum.javafilmorate.controllers;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,14 +9,19 @@ import ru.yandex.practicum.javafilmorate.model.User;
 import ru.yandex.practicum.javafilmorate.service.UserService;
 
 import javax.validation.Valid;
+import java.util.Map;
 
 @Slf4j
 @RestController
-@RequiredArgsConstructor
 @RequestMapping(value = "/users", produces = "application/json")
 public class UserController {
 
     private final UserService userService;
+
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @PostMapping
     public ResponseEntity<?> create(@Valid @RequestBody User user) {
@@ -60,6 +65,12 @@ public class UserController {
     @GetMapping("/{userId}/friends/common/{otherId}")
     public ResponseEntity<?> getCommonFriends(@PathVariable Integer userId, @PathVariable Integer otherId) {
         return new ResponseEntity<>(userService.getCommonFriends(userId, otherId), HttpStatus.OK);
+    }
+
+    @ExceptionHandler()
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> handleNotFoundException(final IllegalStateException e) {
+        return Map.of("Error", e.getMessage());
     }
 
 }

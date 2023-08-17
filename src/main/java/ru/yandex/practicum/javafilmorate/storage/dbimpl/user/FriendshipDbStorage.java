@@ -1,11 +1,15 @@
 package ru.yandex.practicum.javafilmorate.storage.dbimpl.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Component;
+import org.springframework.web.server.ResponseStatusException;
 import ru.yandex.practicum.javafilmorate.model.User;
 import org.springframework.jdbc.core.JdbcTemplate;
 import ru.yandex.practicum.javafilmorate.storage.db.userdb.FriendshipStorage;
+import ru.yandex.practicum.javafilmorate.storage.db.userdb.UserStorage;
 
 import java.util.List;
 
@@ -14,9 +18,12 @@ public class FriendshipDbStorage implements FriendshipStorage {
 
     private final JdbcTemplate jdbcTemplate;
 
+    private final UserStorage userStorage;
+
     @Autowired
-    public FriendshipDbStorage(JdbcTemplate jdbcTemplate) {
+    public FriendshipDbStorage(JdbcTemplate jdbcTemplate, UserStorage userStorage) {
         this.jdbcTemplate = jdbcTemplate;
+        this.userStorage = userStorage;
     }
 
     @Override
@@ -24,7 +31,11 @@ public class FriendshipDbStorage implements FriendshipStorage {
         String sqlQuery = "INSERT INTO FRIENDSHIPS\n" +
                 "(USER_ID, FRIEND_ID)\n" +
                 "VALUES(?, ?)";
-        jdbcTemplate.update(sqlQuery, userId, friendId);
+        try {
+            jdbcTemplate.update(sqlQuery, userStorage.getUser(userId).getId() , userStorage.getUser(friendId).getId());
+        } catch (DuplicateKeyException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
     }
 
     @Override
