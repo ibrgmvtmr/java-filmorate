@@ -7,9 +7,8 @@ import ru.yandex.practicum.javafilmorate.model.User;
 import ru.yandex.practicum.javafilmorate.storage.db.userdb.FriendshipStorage;
 import ru.yandex.practicum.javafilmorate.storage.dbimpl.user.UserDbStorage;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -66,14 +65,8 @@ public class UserService {
         return friendshipStorage.getCommonFriends(userId, friendId);
     }
 
-    public List<Integer> getUserFriends(Integer useId) {
-        List<Integer> friendList = new ArrayList<>();
-        User user = userDbStorage.getUser(useId);
-        for (Integer id: user.getFriends()) {
-            if (id != null) {
-                friendList.add(id);
-            }
-        }
-        return friendList;
+    public Set<Integer> getUserFriends(Integer userId) {
+        log.debug("Запрос на получение друзей для пользователя с ID: {}", userId);
+        return userDbStorage.readUserFriends(userId);
     }
 }

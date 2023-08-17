@@ -39,18 +39,6 @@ public class FriendshipDbStorage implements FriendshipStorage {
     }
 
     @Override
-    public List<User> readUserFriends(Integer userId) {
-        String sqlQuery = "SELECT *\n" +
-                "FROM USERS\n" +
-                "WHERE USER_ID IN (\n" +
-                "    SELECT FRIEND_ID\n" +
-                "    FROM FRIENDSHIPS\n" +
-                "    WHERE USERS.USER_ID = ?\n" +
-                ")";
-        return jdbcTemplate.query(sqlQuery, new BeanPropertyRowMapper<>(User.class), userId);
-    }
-
-    @Override
     public List<User> getCommonFriends(Integer userId, Integer friendId) {
         String sqlQuery = "SELECT u.*\n" +
                 "FROM USERS u\n" +
