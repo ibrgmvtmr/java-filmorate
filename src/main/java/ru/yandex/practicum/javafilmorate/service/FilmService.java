@@ -3,7 +3,6 @@ package ru.yandex.practicum.javafilmorate.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.javafilmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.javafilmorate.model.Film;
 import ru.yandex.practicum.javafilmorate.storage.db.filmdb.*;
 
@@ -35,11 +34,8 @@ public class FilmService {
         return filmsStorage.getFilms();
     }
 
-    public Film getFilm(Integer id) {
-        if (filmsStorage.getFilm(id) != null) {
-            return filmsStorage.getFilm(id);
-        }
-        throw new NotFoundException("Фильма с указанным id не существует");
+    public Film getFilm(Integer filmId) {
+        return filmsStorage.getFilm(filmId);
     }
 
     public Collection<Film> getMostPopularFilms(Integer count) {

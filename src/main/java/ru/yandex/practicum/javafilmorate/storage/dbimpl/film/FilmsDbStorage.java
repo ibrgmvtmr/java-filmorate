@@ -103,13 +103,18 @@ public class FilmsDbStorage implements FilmsStorage {
 
 
     @Override
-    public Film getFilm(Integer id) {
+    public Film getFilm(Integer filmId) {
         String sqlQuery = "SELECT F.FILM_ID, F.NAME, F.DESCRIPTION, F.RELEASE_DATE, F.DURATION, M.MPA_ID," +
-                " M.NAME, M.DESCRIPTION\n" +
+                " M.NAME AS MPA_NAME, M.DESCRIPTION AS MPA_DESCRIPTION\n" +
                 "FROM FILMS AS F\n" +
-                "JOIN MPA AS M ON F.MPA_ID = M.MPA_ID;";
-       return jdbcTemplate.query(sqlQuery, (rs, rowNum) -> mpaRowToFilm(rs), id).stream()
-                .findAny().orElse(null);
+                "JOIN MPA AS M ON F.MPA_ID = M.MPA_ID\n" +
+                "WHERE F.FILM_ID = ?;";
+
+        try {
+            return jdbcTemplate.queryForObject(sqlQuery, (rs, rowNum) -> mpaRowToFilm(rs), filmId);
+        } catch (Throwable throwable) {
+            throw new NotFoundException("Фильм с таким id не найден");
+        }
     }
 
     @Override
@@ -136,7 +141,7 @@ public class FilmsDbStorage implements FilmsStorage {
 
     public Film mpaRowToFilm(ResultSet resultSet) throws SQLException {
         return Film.builder()
-                .id(resultSet.getInt("ID"))
+                .id(resultSet.getInt("FILM_ID"))
                 .name(resultSet.getString("NAME"))
                 .description((resultSet.getString("DESCRIPTION")))
                 .releaseDate(resultSet.getDate("RELEASE_DATE").toLocalDate())
