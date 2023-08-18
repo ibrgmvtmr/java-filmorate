@@ -8,47 +8,27 @@ import ru.yandex.practicum.javafilmorate.model.Film;
 import ru.yandex.practicum.javafilmorate.storage.db.filmdb.*;
 
 import java.util.Collection;
-import java.util.HashSet;
 
 @Slf4j
 @Service
 public class FilmService {
     private final FilmsStorage filmsStorage;
-    private final MpaStorage mpaStorage;
     private final LikesStorage likesStorage;
 
-    private final FilmsGenresStorage filmsGenresStorage;
-
     @Autowired
-    public FilmService(FilmsStorage filmStorage, MpaStorage mpaDao,
-                       LikesStorage likesDao, FilmsGenresStorage filmsGenresStorage) {
+    public FilmService(FilmsStorage filmStorage, LikesStorage likesDao) {
         this.filmsStorage = filmStorage;
-        this.mpaStorage = mpaDao;
         this.likesStorage = likesDao;
-        this.filmsGenresStorage = filmsGenresStorage;
     }
 
     public Film create(Film film) {
         Film newFilm = filmsStorage.createFilm(film);
         log.debug("Фильм с id = {} добавлен в бд", film.getId());
-        if (film.getGenres() != null) {
-            newFilm.setGenres(filmsGenresStorage.setGenresFilm(film.getId(), new HashSet<>(film.getGenres())));
-        }
-
         return newFilm;
     }
 
     public Film update(Film film) {
-        if (film.getId() != null) {
-            Film updatedFilm = filmsStorage.updateFilm(film);
-            updatedFilm.setMpa(mpaStorage.getMpa(film.getMpa().getId()));
-            if (film.getGenres() != null) {
-                filmsGenresStorage.delete(film.getId());
-                updatedFilm.setGenres(filmsGenresStorage.setGenresFilm(film.getId(), new HashSet<>(film.getGenres())));
-            }
-            return film;
-        }
-        throw new NotFoundException("Фильма с указанным id не существует");
+      return filmsStorage.updateFilm(film);
     }
 
     public Collection<Film> getFilms() {

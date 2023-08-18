@@ -2,6 +2,7 @@ package ru.yandex.practicum.javafilmorate.storage.dbimpl.film;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.javafilmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.javafilmorate.model.Mpa;
 import ru.yandex.practicum.javafilmorate.storage.db.filmdb.MpaStorage;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -46,8 +47,13 @@ public class MpaDbStorage implements MpaStorage {
         String sqlQuery = "SELECT MPA_ID, NAME, DESCRIPTION\n" +
                 "FROM MPA\n" +
                 "WHERE MPA_ID = ?;";
-        return jdbcTemplate.query(sqlQuery, (rs, rowNum) -> mapRowToMpa(rs)).stream()
-                .findAny().orElse(null);
+        List<Mpa> result = jdbcTemplate.query(sqlQuery, (rs, rowNum) -> mapRowToMpa(rs), id);
+
+        if (result.isEmpty()) {
+            throw new NotFoundException("MPA c таким id не существует");
+        }
+
+        return result.get(0);
     }
 
     @Override

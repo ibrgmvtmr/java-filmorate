@@ -1,11 +1,11 @@
 package ru.yandex.practicum.javafilmorate.storage.db.filmdb;
 
-import java.util.Set;
+import java.util.List;
 
 public interface LikesStorage {
     void addLike(Integer userId, Integer filmId);
 
-    Set<Integer> readUsersLikes(Integer filmId);
+    List<Integer> readUsersLikes(Integer filmId);
 
     void deleteLike(long userId, long filmId);
 

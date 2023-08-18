@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.javafilmorate.storage.db.filmdb.LikesStorage;
 
 import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Component
 public class LikesDbStorage implements LikesStorage {
@@ -26,11 +26,11 @@ public class LikesDbStorage implements LikesStorage {
     }
 
     @Override
-    public Set<Integer> readUsersLikes(Integer filmId) {
+    public List<Integer> readUsersLikes(Integer filmId) {
         String sql = "SELECT USER_ID\n" +
                 "FROM LIKES\n" +
                 "WHERE FILM_ID = ?";
-        return new HashSet<>(jdbcTemplate.queryForList(sql, Integer.class, filmId));
+        return jdbcTemplate.queryForList(sql, Integer.class, filmId);
     }
 
     @Override

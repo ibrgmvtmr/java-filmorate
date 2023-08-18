@@ -40,5 +40,5 @@ public class Film {
 
     private List<Genre> genres = new ArrayList<>();
 
-    private Set<Integer> likes = new HashSet<>();
+    private List<Integer> likes = new ArrayList<>();
 }

@@ -5,7 +5,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.javafilmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.javafilmorate.model.Film;
+import ru.yandex.practicum.javafilmorate.model.Genre;
 import ru.yandex.practicum.javafilmorate.storage.db.filmdb.FilmsStorage;
 import ru.yandex.practicum.javafilmorate.storage.db.filmdb.FilmsGenresStorage;
 import ru.yandex.practicum.javafilmorate.storage.db.filmdb.LikesStorage;
@@ -14,8 +16,11 @@ import ru.yandex.practicum.javafilmorate.storage.db.filmdb.MpaStorage;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
@@ -47,7 +52,7 @@ public class FilmsDbStorage implements FilmsStorage {
                 " VALUES (?, ?, ?, ?, ?)";
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection
-                    .prepareStatement(sqlQuery, new String[]{"film_id"});
+                    .prepareStatement(sqlQuery, new String[]{"FILM_ID"});
             ps.setString(1, film.getName());
             ps.setString(2, film.getDescription());
             ps.setDate(3, java.sql.Date.valueOf(film.getReleaseDate()));
@@ -60,17 +65,43 @@ public class FilmsDbStorage implements FilmsStorage {
 
 
         film.setId(Objects.requireNonNull(generatedId.getKey()).intValue());
+
+        if (film.getGenres() != null && !film.getGenres().isEmpty()) {
+            Set<Genre> genres = new HashSet<>(film.getGenres());
+            genres.addAll(film.getGenres());
+            filmsGenresStorage.setGenresFilm(film.getId(), genres);
+        }
+
+        if (film.getMpa() != null) {
+            film.setMpa(mpaStorage.getMpa(film.getMpa().getId()));
+        }
         return film;
     }
 
     @Override
     public Film updateFilm(Film film) {
-        jdbcTemplate.update("UPDATE FILMS " +
+        if (film == null) {
+            throw new IllegalArgumentException("Передан недействительный объект фильма для обновления");
+        }
+
+        String sqlQuery = "UPDATE FILMS " +
                 "SET NAME=?, DESCRIPTION=?, RELEASE_DATE=?, DURATION=?, MPA_ID=? " +
-                "WHERE FILM_ID=?;",
-                film.getName(), film.getDescription(), film.getReleaseDate(), film.getDuration(), film.getMpa().getId());
+                "WHERE FILM_ID=?;";
+
+        int rowsUpdated = jdbcTemplate.update(sqlQuery, film.getName(), film.getDescription(),
+                film.getReleaseDate(), film.getDuration(),
+                film.getMpa().getId(), film.getId());
+
+        if (rowsUpdated == 0) {
+            throw new NotFoundException("Фильм с указанным ID не найден, обновление не выполнено");
+        }
+
+        filmsGenresStorage.delete(film.getId());
+        Set<Genre> genres = new HashSet<>(film.getGenres());
+        filmsGenresStorage.setGenresFilm(film.getId(), genres);
         return film;
     }
+
 
     @Override
     public Film getFilm(Integer id) {
@@ -111,8 +142,8 @@ public class FilmsDbStorage implements FilmsStorage {
                 .description((resultSet.getString("DESCRIPTION")))
                 .releaseDate(resultSet.getDate("RELEASE_DATE").toLocalDate())
                 .duration(resultSet.getInt("DURATION"))
-                .mpa(mpaStorage.getMpa(resultSet.getInt("FILM_ID")))
-                .likes(likesStorage.readUsersLikes(resultSet.getInt("MPA_ID")))
+                .mpa(mpaStorage.getMpa(resultSet.getInt("MPA_ID")))
+                .likes(likesStorage.readUsersLikes(resultSet.getInt("FILM_ID")))
                 .genres(filmsGenresStorage.readFilmGenres(resultSet.getInt("FILM_ID")))
                 .build();
     }
