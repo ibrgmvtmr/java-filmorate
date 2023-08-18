@@ -5,7 +5,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.javafilmorate.storage.db.filmdb.LikesStorage;
 
-import java.util.HashSet;
 import java.util.List;
 
 @Component
