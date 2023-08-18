@@ -134,7 +134,7 @@ public class FilmsDbStorage implements FilmsStorage {
                           "GROUP BY F.FILM_ID\n" +
                           "ORDER BY RATING DESC\n" +
                           "LIMIT ?";
-        return jdbcTemplate.query(sqlQuery, (rs, rowNum) -> mpaRowToFilm(rs)).stream()
+        return jdbcTemplate.query(sqlQuery, (rs, rowNum) -> mpaRowToFilm(rs), count).stream()
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
