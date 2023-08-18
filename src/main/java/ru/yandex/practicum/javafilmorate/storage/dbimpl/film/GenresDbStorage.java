@@ -10,11 +10,8 @@ import ru.yandex.practicum.javafilmorate.model.Genre;
 import ru.yandex.practicum.javafilmorate.storage.db.filmdb.GenresStorage;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Component
 public class GenresDbStorage implements GenresStorage {
