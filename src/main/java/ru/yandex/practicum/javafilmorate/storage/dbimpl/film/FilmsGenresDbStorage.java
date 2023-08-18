@@ -1,9 +1,9 @@
 package ru.yandex.practicum.javafilmorate.storage.dbimpl.film;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.javafilmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.javafilmorate.model.Genre;
 import ru.yandex.practicum.javafilmorate.storage.db.filmdb.FilmsGenresStorage;
 
@@ -28,12 +28,21 @@ public class FilmsGenresDbStorage implements FilmsGenresStorage {
 
     @Override
     public List<Genre> readFilmGenres(Integer filmId) {
-        String sqlQuery = "SELECT G.*\n" +
-                     "FROM GENRES G\n" +
-                     "LEFT JOIN FILM_GENRES FG ON FG.GENRE_ID = G.GENRE_ID\n" +
-                     "WHERE FG.FILM_ID = ?\n" +
-                     "ORDER BY G.GENRE_ID;";
-        return jdbcTemplate.query(sqlQuery, new BeanPropertyRowMapper<>(Genre.class), filmId);
+        String sqlQuery = "SELECT G.GENRE_ID, G.NAME\n" +
+                "FROM GENRES G\n" +
+                "LEFT JOIN FILM_GENRES FG ON FG.GENRE_ID = G.GENRE_ID\n" +
+                "WHERE FG.FILM_ID = ?\n" +
+                "ORDER BY G.GENRE_ID;";
+        try {
+            return jdbcTemplate.query(sqlQuery, (rs, rowNum) -> {
+                Genre genre = new Genre();
+                genre.setId(rs.getInt("GENRE_ID"));
+                genre.setName(rs.getString("NAME"));
+                return genre;
+            }, filmId);
+        } catch (Throwable throwable) {
+            throw new NotFoundException("Фильм с таким id не найден");
+        }
     }
 
     @Override
@@ -43,10 +52,8 @@ public class FilmsGenresDbStorage implements FilmsGenresStorage {
     }
 
     @Override
-    public List<Genre> setGenresFilm(Integer filmId, Set<Genre> genres) {
-        for (Genre genre : genres) {
-            create(filmId, genre.getId());
-        }
+    public List<Genre> setFilmGenres(Integer filmId, Set<Genre> genres) {
+        genres.forEach((genre) -> create(filmId, genre.getId()));
         return readFilmGenres(filmId);
     }
 }

@@ -12,5 +12,5 @@ public interface FilmsGenresStorage {
 
     void delete(Integer filmId);
 
-    List<Genre> setGenresFilm(Integer filmId, Set<Genre> genres);
+    List<Genre> setFilmGenres(Integer filmId, Set<Genre> genres);
 }

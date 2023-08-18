@@ -62,14 +62,17 @@ public class FilmsDbStorage implements FilmsStorage {
             return ps;
         }, generatedId);
 
+        if (film.getGenres() != null && !film.getGenres().isEmpty()) {
+            List<Genre> genres = filmsGenresStorage.setFilmGenres(film.getId(), new HashSet<>(film.getGenres()));
+            film.setGenres(genres);
+        }
+
+        if (film.getMpa() != null) {
+            film.setMpa(mpaStorage.getMpa(film.getMpa().getId()));
+        }
 
         film.setId(Objects.requireNonNull(generatedId.getKey()).intValue());
 
-        if (film.getGenres() != null && !film.getGenres().isEmpty()) {
-            Set<Genre> genres = new HashSet<>(film.getGenres());
-            genres.addAll(film.getGenres());
-            filmsGenresStorage.setGenresFilm(film.getId(), genres);
-        }
 
         if (film.getMpa() != null) {
             film.setMpa(mpaStorage.getMpa(film.getMpa().getId()));
@@ -95,9 +98,11 @@ public class FilmsDbStorage implements FilmsStorage {
             throw new NotFoundException("Фильм с указанным ID не найден, обновление не выполнено");
         }
 
-        filmsGenresStorage.delete(film.getId());
-        Set<Genre> genres = new HashSet<>(film.getGenres());
-        filmsGenresStorage.setGenresFilm(film.getId(), genres);
+        if (film.getGenres() != null && !film.getGenres().isEmpty()) {
+            filmsGenresStorage.delete(film.getId());
+            List<Genre> genres = filmsGenresStorage.setFilmGenres(film.getId(), new HashSet<>(film.getGenres()));
+            film.setGenres(genres);
+        }
         return film;
     }
 
