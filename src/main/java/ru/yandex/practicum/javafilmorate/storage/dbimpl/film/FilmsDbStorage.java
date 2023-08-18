@@ -16,7 +16,6 @@ import ru.yandex.practicum.javafilmorate.storage.db.filmdb.MpaStorage;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Types;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
