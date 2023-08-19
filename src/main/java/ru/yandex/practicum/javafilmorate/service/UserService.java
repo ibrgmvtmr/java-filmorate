@@ -63,7 +63,7 @@ public class UserService {
 
     public Collection<User> getCommonFriends(Integer userId, Integer friendId) {
         log.debug("Получен запрос на получение списка общих друзей");
-        return friendshipStorage.getCommonFriends(userId, friendId);
+        return userDbStorage.getCommonFriends(userId, friendId);
     }
 
     public Set<User> getUserFriends(Integer userId) {

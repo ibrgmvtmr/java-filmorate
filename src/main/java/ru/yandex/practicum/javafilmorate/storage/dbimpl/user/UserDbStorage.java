@@ -94,6 +94,21 @@ public class UserDbStorage implements UserStorage {
         return ids;
     }
 
+    @Override
+    public List<User> getCommonFriends(Integer userId, Integer friendId) {
+        String sql = "SELECT u.*\n" +
+                "FROM USERS u\n" +
+                "WHERE u.USER_ID IN (\n" +
+                "    SELECT f2.FRIEND_ID\n" +
+                "    FROM FRIENDSHIPS f1\n" +
+                "    INNER JOIN FRIENDSHIPS f2 ON f1.FRIEND_ID = f2.FRIEND_ID\n" +
+                "    WHERE f1.USER_ID = ?\n" +
+                "    AND f2.USER_ID = ?\n" +
+                ")";
+
+        return jdbcTemplate.query(sql, (rs, rowNum) -> mpaRowToUser(rs), userId, friendId);
+    }
+
     public User mpaRowToUser(ResultSet resultSet) throws SQLException {
         return User.builder()
                 .id(resultSet.getInt("USER_ID"))
