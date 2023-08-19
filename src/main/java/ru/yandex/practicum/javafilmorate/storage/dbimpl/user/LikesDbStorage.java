@@ -18,10 +18,10 @@ public class LikesDbStorage implements LikesStorage {
     }
 
     @Override
-    public void addLike(Integer userId, Integer filmId) {
-        String sqlQuery = "INSERT INTO LIKES(USER_ID, FILM_ID)\n" +
+    public void addLike(Integer filmId, Integer userId) {
+        String sqlQuery = "INSERT INTO LIKES(FILM_ID, USER_ID)\n" +
                 "VALUES(?, ?);";
-        jdbcTemplate.update(sqlQuery, userId, filmId);
+        jdbcTemplate.update(sqlQuery, filmId, userId);
     }
 
     @Override
