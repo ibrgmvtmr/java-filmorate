@@ -97,11 +97,10 @@ public class FilmsDbStorage implements FilmsStorage {
             throw new NotFoundException("Фильм с указанным ID не найден, обновление не выполнено");
         }
 
-        if (film.getGenres() != null && !film.getGenres().isEmpty()) {
-            filmsGenresStorage.delete(film.getId());
-            List<Genre> genres = filmsGenresStorage.setFilmGenres(film.getId(), new HashSet<>(film.getGenres()));
-            film.setGenres(genres);
-        }
+        filmsGenresStorage.delete(film.getId());
+        List<Genre> genres = filmsGenresStorage.setFilmGenres(film.getId(), new HashSet<>(film.getGenres()));
+        film.setGenres(genres);
+
         return film;
     }
 
