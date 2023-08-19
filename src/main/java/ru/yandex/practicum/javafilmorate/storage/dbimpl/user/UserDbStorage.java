@@ -53,7 +53,7 @@ public class UserDbStorage implements UserStorage {
         String sqlQuery = "UPDATE USERS\n" +
                 "SET NAME=?, LOGIN=?, EMAIL=?, BIRTHDAY=?\n" +
                 "WHERE USER_ID=?;";
-        int rowsUpdated = jdbcTemplate.update(sqlQuery, user.getEmail(), user.getLogin(), user.getName(), user.getBirthday(), user.getId());
+        int rowsUpdated = jdbcTemplate.update(sqlQuery, user.getName(), user.getLogin(), user.getEmail(), user.getBirthday(), user.getId());
 
         if (rowsUpdated > 0) {
             return user;
@@ -113,8 +113,8 @@ public class UserDbStorage implements UserStorage {
         return User.builder()
                 .id(resultSet.getInt("USER_ID"))
                 .name(resultSet.getString("NAME"))
-                .login(resultSet.getString("LOGIN"))
                 .email(resultSet.getString("EMAIL"))
+                .login(resultSet.getString("LOGIN"))
                 .birthday(resultSet.getDate("BIRTHDAY").toLocalDate())
                 .friends(readUserFriends(resultSet.getInt("USER_ID")))
                 .build();
