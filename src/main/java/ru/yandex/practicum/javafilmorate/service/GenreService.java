@@ -21,15 +21,6 @@ public class GenreService {
        return genreDbStorage.create(genre);
     }
 
-    public Genre update(Genre genre) {
-        if (genreDbStorage.getGenre(genre.getId()) != null) {
-            log.info("Жанр с id '{}' обновлен", genre.getId());
-            return genreDbStorage.update(genre);
-        } else {
-            log.info("Жанр не может быть обновлен, т.к. его нет в списке");
-            throw new NotFoundException("Жанр не может быть обновлен, т.к. его нет в списке");
-        }
-    }
 
     public Genre getGenre(int id) {
         if (genreDbStorage.getGenre(id) != null) {

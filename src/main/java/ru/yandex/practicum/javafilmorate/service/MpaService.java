@@ -19,30 +19,15 @@ public class MpaService {
         this.mpaDbStorage = mpaDbStorage;
     }
 
-    public Mpa create(Mpa mpa) {
-        checkId(mpa.getId());
-        return mpaDbStorage.create(mpa);
-    }
-
-    public Mpa update(Mpa mpa) {
-        checkId(mpa.getId());
-        return mpaDbStorage.update(mpa);
-    }
-
     public Mpa getMpa(Integer id) {
         log.info("Получен GET запрос по эндпоинту '/mpa/{id}' на получение ретинга по id");
-        checkId(id);
+        if (id == null) throw new NotFoundException("MPA с id=%d нет в списке", id);
         return mpaDbStorage.getMpa(id);
     }
 
     public List<Mpa> getMpas() {
         log.info("Получен GET запрос по эндпоинту '/mpa' на получение всех рейтингов");
         return mpaDbStorage.getMpas();
-    }
-
-    public void checkId(Integer id) {
-        log.info("Mpa с id = {} не найден.", id);
-        if (id == null) throw new NotFoundException("MPA с id=%d нет в списке", id);
     }
 
 }

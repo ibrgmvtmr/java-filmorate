@@ -32,14 +32,17 @@ public class FilmService {
     }
 
     public Film update(Film film) {
-      return filmsStorage.updateFilm(film);
+        log.debug("Фильм с id = {} обновлён", film.getId());
+        return filmsStorage.updateFilm(film);
     }
 
     public Collection<Film> getFilms() {
+        log.debug("Получен запрос на получение всех фильмов");
         return filmsStorage.getFilms();
     }
 
     public Film getFilm(Integer filmId) {
+        log.debug("Получен запрос на получение фильма");
         return filmsStorage.getFilm(filmId);
     }
 

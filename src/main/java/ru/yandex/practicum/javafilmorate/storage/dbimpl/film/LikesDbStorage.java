@@ -1,4 +1,4 @@
-package ru.yandex.practicum.javafilmorate.storage.dbimpl.user;
+package ru.yandex.practicum.javafilmorate.storage.dbimpl.film;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
