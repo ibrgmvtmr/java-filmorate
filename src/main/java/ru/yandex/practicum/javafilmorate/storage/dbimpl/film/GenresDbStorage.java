@@ -1,7 +1,6 @@
 package ru.yandex.practicum.javafilmorate.storage.dbimpl.film;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -10,8 +9,11 @@ import ru.yandex.practicum.javafilmorate.model.Genre;
 import ru.yandex.practicum.javafilmorate.storage.db.filmdb.GenresStorage;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Component
 public class GenresDbStorage implements GenresStorage {
@@ -53,7 +55,9 @@ public class GenresDbStorage implements GenresStorage {
     public Collection<Genre> getGenres() {
         String sqlQuery = "SELECT *\n" +
                           "FROM GENRES;";
-       return jdbcTemplate.query(sqlQuery, new BeanPropertyRowMapper<>(Genre.class));
+       return jdbcTemplate.query(sqlQuery, (rs, rowNum) -> mapRowToGenre(rs)).stream()
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -61,7 +65,14 @@ public class GenresDbStorage implements GenresStorage {
         String sqlQuery = "SELECT *\n" +
                           "FROM GENRES\n" +
                           "WHERE GENRE_ID = ?;";
-        return jdbcTemplate.query(sqlQuery, new BeanPropertyRowMapper<>(Genre.class), id).stream()
+        return jdbcTemplate.query(sqlQuery, (rs, rowNum) -> mapRowToGenre(rs), id).stream()
                 .findAny().orElse(null);
+    }
+
+    public Genre mapRowToGenre(ResultSet resultSet) throws SQLException {
+        return Genre.builder()
+                .id(resultSet.getInt("GENRE_ID"))
+                .name(resultSet.getString("NAME"))
+                .build();
     }
 }
