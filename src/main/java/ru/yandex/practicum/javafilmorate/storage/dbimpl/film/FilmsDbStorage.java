@@ -61,6 +61,8 @@ public class FilmsDbStorage implements FilmsStorage {
             return ps;
         }, generatedId);
 
+        film.setId(Objects.requireNonNull(generatedId.getKey()).intValue());
+
         if (film.getGenres() != null && !film.getGenres().isEmpty()) {
             List<Genre> genres = filmsGenresStorage.setFilmGenres(film.getId(), new HashSet<>(film.getGenres()));
             film.setGenres(genres);
@@ -69,8 +71,6 @@ public class FilmsDbStorage implements FilmsStorage {
         if (film.getMpa() != null) {
             film.setMpa(mpaStorage.getMpa(film.getMpa().getId()));
         }
-
-        film.setId(Objects.requireNonNull(generatedId.getKey()).intValue());
 
 
         if (film.getMpa() != null) {
