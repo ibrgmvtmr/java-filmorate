@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.javafilmorate.model.Film;
 import ru.yandex.practicum.javafilmorate.storage.db.filmdb.*;
+import ru.yandex.practicum.javafilmorate.storage.db.userdb.LikesStorage;
+import ru.yandex.practicum.javafilmorate.storage.db.userdb.UserStorage;
 
 import java.util.Collection;
 
@@ -14,10 +16,13 @@ public class FilmService {
     private final FilmsStorage filmsStorage;
     private final LikesStorage likesStorage;
 
+    private final UserStorage userStorage;
+
     @Autowired
-    public FilmService(FilmsStorage filmStorage, LikesStorage likesDao) {
+    public FilmService(FilmsStorage filmStorage, LikesStorage likesDao, UserStorage userStorage) {
         this.filmsStorage = filmStorage;
         this.likesStorage = likesDao;
+        this.userStorage = userStorage;
     }
 
     public Film create(Film film) {
@@ -45,11 +50,15 @@ public class FilmService {
 
     public void addLike(Integer filmId, Integer userId) {
         log.debug("Получен запрос на добавление лайка фильму");
+        userStorage.getUser(userId);
+        filmsStorage.getFilm(filmId);
         likesStorage.addLike(filmId, userId);
     }
 
-    public void deleteLike(long filmId, long userId) {
+    public void deleteLike(Integer filmId, Integer userId) {
         log.debug("Получен запрос на удаление лайка фильму");
+        userStorage.getUser(userId);
+        filmsStorage.getFilm(filmId);
         likesStorage.deleteLike(filmId,userId);
     }
 

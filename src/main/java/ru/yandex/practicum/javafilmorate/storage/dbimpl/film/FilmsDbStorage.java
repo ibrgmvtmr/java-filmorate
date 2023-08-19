@@ -10,7 +10,7 @@ import ru.yandex.practicum.javafilmorate.model.Film;
 import ru.yandex.practicum.javafilmorate.model.Genre;
 import ru.yandex.practicum.javafilmorate.storage.db.filmdb.FilmsStorage;
 import ru.yandex.practicum.javafilmorate.storage.db.filmdb.FilmsGenresStorage;
-import ru.yandex.practicum.javafilmorate.storage.db.filmdb.LikesStorage;
+import ru.yandex.practicum.javafilmorate.storage.db.userdb.LikesStorage;
 import ru.yandex.practicum.javafilmorate.storage.db.filmdb.MpaStorage;
 
 import java.sql.PreparedStatement;

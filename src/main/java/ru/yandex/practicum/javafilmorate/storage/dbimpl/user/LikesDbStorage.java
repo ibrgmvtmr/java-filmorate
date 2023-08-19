@@ -1,9 +1,9 @@
-package ru.yandex.practicum.javafilmorate.storage.dbimpl.film;
+package ru.yandex.practicum.javafilmorate.storage.dbimpl.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.javafilmorate.storage.db.filmdb.LikesStorage;
+import ru.yandex.practicum.javafilmorate.storage.db.userdb.LikesStorage;
 
 import java.util.List;
 
@@ -33,7 +33,7 @@ public class LikesDbStorage implements LikesStorage {
     }
 
     @Override
-    public void deleteLike(long userId, long filmId) {
+    public void deleteLike(Integer userId, Integer filmId) {
         String sqlQuery = "DELETE FROM LIKES WHERE USER_ID = ? AND FILM_ID = ?";
         jdbcTemplate.update(sqlQuery, userId, filmId);
     }
