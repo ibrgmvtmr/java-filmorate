@@ -3,107 +3,66 @@ package ru.yandex.practicum.javafilmorate.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.javafilmorate.exceptions.NotFoundException;
-import ru.yandex.practicum.javafilmorate.exceptions.ValidationException;
 import ru.yandex.practicum.javafilmorate.model.Film;
-import ru.yandex.practicum.javafilmorate.storage.inmemory.InMemoryFilmStorage;
-import ru.yandex.practicum.javafilmorate.storage.inmemory.InMemoryUserStorage;
+import ru.yandex.practicum.javafilmorate.storage.db.filmdb.*;
+import ru.yandex.practicum.javafilmorate.storage.db.userdb.LikesStorage;
+import ru.yandex.practicum.javafilmorate.storage.db.userdb.UserStorage;
 
-import java.time.LocalDate;
-import java.time.Month;
-import java.util.List;
+import java.util.Collection;
 
 @Slf4j
 @Service
 public class FilmService {
-    private final InMemoryFilmStorage inMemoryFilmStorage;
-    private final InMemoryUserStorage inMemoryUserStorage;
-    private final LocalDate firstFilmRelease = LocalDate.of(1895, Month.DECEMBER, 28);
+    private final FilmsStorage filmsStorage;
+    private final LikesStorage likesStorage;
+
+    private final UserStorage userStorage;
 
     @Autowired
-    public FilmService(InMemoryFilmStorage inMemoryFilmStorage, InMemoryUserStorage inMemoryUserStorage) {
-        this.inMemoryFilmStorage = inMemoryFilmStorage;
-        this.inMemoryUserStorage = inMemoryUserStorage;
+    public FilmService(FilmsStorage filmStorage, LikesStorage likesDao, UserStorage userStorage) {
+        this.filmsStorage = filmStorage;
+        this.likesStorage = likesDao;
+        this.userStorage = userStorage;
     }
 
-    public void createFilm(Film film) {
-        filmValidation(film);
-        inMemoryFilmStorage.createFilm(film);
-        log.debug("Фильм добавлен: {}", film);
+    public Film create(Film film) {
+        Film newFilm = filmsStorage.createFilm(film);
+        log.debug("Фильм с id = {} добавлен в бд", film.getId());
+        return newFilm;
     }
 
-    public void updateFilm(Film film) {
-        if (inMemoryFilmStorage.getFilm(film.getId()) == null) {
-            String msg = "Фильм с таким ID не существует";
-            log.warn(msg);
-            throw new NotFoundException(msg);
-        }
-        filmValidation(film);
-        inMemoryFilmStorage.updateFilm(film);
-        log.debug("Фильм обновлён");
+    public Film update(Film film) {
+        log.debug("Фильм с id = {} обновлён", film.getId());
+        return filmsStorage.updateFilm(film);
     }
 
-    public List<Film> getAllFilms() {
-        log.debug("Получение всех фильмов");
-        return inMemoryFilmStorage.getFilms();
+    public Collection<Film> getFilms() {
+        log.debug("Получен запрос на получение всех фильмов");
+        return filmsStorage.getFilms();
     }
 
-    public Film getFilm(Integer filmID) {
-        if (inMemoryFilmStorage.getFilm(filmID) == null) {
-            String msg = "Фильм с таким ID не существует";
-            log.warn(msg);
-            throw new NotFoundException(msg);
-        }
-        log.debug("Получение фильма по ID");
-        return inMemoryFilmStorage.getFilm(filmID);
+    public Film getFilm(Integer filmId) {
+        log.debug("Получен запрос на получение фильма");
+        return filmsStorage.getFilm(filmId);
+    }
+
+    public Collection<Film> getMostPopularFilms(Integer count) {
+        log.debug("Получен запрос на получение популярных фильмов");
+        return filmsStorage.getTopFilms(count);
     }
 
     public void addLike(Integer filmId, Integer userId) {
-        if (inMemoryFilmStorage.getFilm(filmId) == null) {
-            String msg = "Фильм с таким ID не существует";
-            log.warn(msg);
-            throw new NotFoundException(msg);
-        }
-        if (inMemoryUserStorage.getUser(userId) == null) {
-            String msg = "Пользователя с таким ID не существует";
-            log.warn(msg);
-            throw new NotFoundException(msg);
-        }
-        inMemoryFilmStorage.addLike(filmId, userId);
-        log.debug("Лайк добавлен");
+        log.debug("Получен запрос на добавление лайка фильму");
+        userStorage.getUser(userId);
+        filmsStorage.getFilm(filmId);
+        likesStorage.addLike(filmId, userId);
     }
 
     public void deleteLike(Integer filmId, Integer userId) {
-        if (inMemoryFilmStorage.getFilm(filmId) == null) {
-            String msg = "Фильм с таким ID не существует";
-            log.warn(msg);
-            throw new NotFoundException(msg);
-        }
-        if (inMemoryUserStorage.getUser(userId) == null) {
-            String msg = "Пользователя с таким ID не существует";
-            log.warn(msg);
-            throw new NotFoundException(msg);
-        }
-        inMemoryFilmStorage.deleteLike(filmId, userId);
-        log.debug("Лайк удалён");
+        log.debug("Получен запрос на удаление лайка фильму");
+        userStorage.getUser(userId);
+        filmsStorage.getFilm(filmId);
+        likesStorage.deleteLike(filmId,userId);
     }
 
-    public List<Film> getTopFilms(int count) {
-        log.debug("Получение популярных фильмов");
-        return inMemoryFilmStorage.getTopFilms(count);
-    }
-
-    public void filmValidation(Film film) {
-        if (film.getDuration() <= 0) {
-            String msg = "Неправильная продолжительность фильма";
-            log.warn(msg);
-            throw new ValidationException(msg);
-        }
-
-        if (film.getReleaseDate().isBefore(firstFilmRelease)) {
-            String msg = "Неверная дата релиза фильма";
-            log.warn(msg);
-            throw new ValidationException(msg);
-        }
-    }
 }

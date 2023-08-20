@@ -13,27 +13,27 @@ import java.util.Map;
 
 @Slf4j
 @RestController
-@RequestMapping("/films")
 @RequiredArgsConstructor
+@RequestMapping("/films")
 public class FilmController {
 
     private final FilmService filmService;
 
     @PostMapping
     public ResponseEntity<?> createFilm(@RequestBody @Valid Film film) {
-        filmService.createFilm(film);
+        filmService.create(film);
         return new ResponseEntity<>(film, HttpStatus.CREATED);
     }
 
     @PutMapping
     public  ResponseEntity<?> updateFilm(@Valid @RequestBody Film film) {
-        filmService.updateFilm(film);
+        filmService.update(film);
         return new ResponseEntity<>(film, HttpStatus.OK);
     }
 
     @GetMapping()
     public ResponseEntity<?> getFilms() {
-        return new ResponseEntity<>(filmService.getAllFilms(), HttpStatus.OK);
+        return new ResponseEntity<>(filmService.getFilms(), HttpStatus.OK);
     }
 
     @GetMapping("/{filmId}")
@@ -54,8 +54,8 @@ public class FilmController {
     }
 
     @GetMapping("/popular")
-    public ResponseEntity<?> getBestFilms(@RequestParam(defaultValue = "10") int count) {
-        return new ResponseEntity<>(filmService.getTopFilms(count), HttpStatus.OK);
+    public ResponseEntity<?> getTopFilms(@RequestParam(defaultValue = "10") int count) {
+        return new ResponseEntity<>(filmService.getMostPopularFilms(count), HttpStatus.OK);
     }
 
     @ExceptionHandler()

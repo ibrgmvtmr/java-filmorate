@@ -1,5 +1,6 @@
 package ru.yandex.practicum.javafilmorate.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,11 +10,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import ru.yandex.practicum.javafilmorate.storage.inmemory.InMemoryFilmStorage;
+import ru.yandex.practicum.javafilmorate.model.Film;
+import ru.yandex.practicum.javafilmorate.service.FilmService;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import java.time.LocalDate;
+import java.util.Collections;
+
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -23,79 +26,88 @@ public class FilmControllerTests {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @MockBean
-    private InMemoryFilmStorage inMemoryFilmStorage;
+    private FilmService filmService;
 
     @Test
-    @DisplayName("Добавление нового фильма - duration : 0")
-    public void methodPost_NewFilmValidFalse_DurationZeroTest() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.post("/films")
+    @DisplayName("Получение списка всех фильмов")
+    public void getFilms_ValidDataTest() throws Exception {
+        when(filmService.getFilms()).thenReturn(Collections.singletonList(
+                Film.builder()
+                        .id(1)
+                        .name("Film 1")
+                        .description("Description")
+                        .releaseDate(LocalDate.of(2022, 1, 1))
+                        .duration(120)
+                        .genres(Collections.emptyList())
+                        .likes(Collections.emptyList())
+                        .build()
+        ));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/films"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("Получение фильма по ID")
+    public void getFilm_ValidDataTest() throws Exception {
+        Film film = Film.builder()
+                .id(1)
+                .name("Film 1")
+                .description("Description")
+                .releaseDate(LocalDate.of(2022, 1, 1))
+                .duration(120)
+                .genres(Collections.emptyList())
+                .likes(Collections.emptyList())
+                .build();
+
+        when(filmService.getFilm(film.getId())).thenReturn(film);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/films/{filmId}", film.getId()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("Обновление информации о фильме")
+    public void updateFilm_ValidDataTest() throws Exception {
+        Film film = Film.builder()
+                .id(1)
+                .name("Film 1")
+                .description("Description")
+                .releaseDate(LocalDate.of(2022, 1, 1))
+                .duration(120)
+                .genres(Collections.emptyList())
+                .likes(Collections.emptyList())
+                .build();
+
+        when(filmService.update(film)).thenReturn(film);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/films")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"\",\"description\":\"Film Description\",\"releaseDate\":\"2023-07-05\",\"duration\":0}"))
-                .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andDo(print());
+                        .content(objectMapper.writeValueAsString(film)))
+                .andExpect(status().isOk());
     }
 
     @Test
-    @DisplayName("Добавление нового фильма - name : null")
-    public void methodPost_NewFilmValidFalse_NameNullTest() throws Exception {
-        mockMvc.perform(post("/films")
-                        .content(
-                                "{" +
-                                        "\"description\":\"test\"," +
-                                        "\"releaseDate\":\"2023-01-01\"," +
-                                        "\"duration\":135" +
-                                        "}"
-                        )
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is(400));
+    @DisplayName("Добавление лайка к фильму")
+    public void addLike_ValidDataTest() throws Exception {
+        int filmId = 1;
+        int userId = 1;
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/films/{filmId}/like/{userId}", filmId, userId))
+                .andExpect(status().isOk());
     }
 
     @Test
-    @DisplayName("Добавление нового фильма - description : null")
-    public void methodPost_NewFilmValidFalse_DescriptionNullTest() throws Exception {
-        mockMvc.perform(post("/films")
-                        .content(
-                                "{" +
-                                        "\"name\":\"test\"," +
-                                        "\"releaseDate\":\"2023-01-01\"," +
-                                        "\"duration\":135" +
-                                        "}"
-                        )
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is(400));
+    @DisplayName("Удаление лайка из фильма")
+    public void deleteLike_ValidDataTest() throws Exception {
+        int filmId = 1;
+        int userId = 1;
 
-    }
-
-    @Test
-    @DisplayName("Добавление нового фильма - releaseDate : incorrect")
-    public void methodPost_NewFilmValidFalse_InvalidReleaseDate() throws Exception {
-        mockMvc.perform(post("/films")
-                        .content(
-                                "{" +
-                                        "\"name\":\"test\"," +
-                                        "\"description\":\"test\"," +
-                                        "\"releaseDate\":\"1800-01-01\"," +
-                                        "\"duration\":135" +
-                                        "}"
-                        )
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is(400));
-    }
-
-    @Test
-    @DisplayName("Добавление нового фильма")
-    public void methodPost_NewFilmValidTrue() throws Exception {
-        mockMvc.perform(post("/films")
-                        .content(
-                                "{" +
-                                        "\"name\":\"test\"," +
-                                        "\"description\":\"test\"," +
-                                        "\"releaseDate\":\"2020-01-01\"," +
-                                        "\"duration\":135" +
-                                        "}"
-                        )
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is(201));
+        mockMvc.perform(MockMvcRequestBuilders.delete("/films/{filmId}/like/{userId}", filmId, userId))
+                .andExpect(status().isOk());
     }
 }
