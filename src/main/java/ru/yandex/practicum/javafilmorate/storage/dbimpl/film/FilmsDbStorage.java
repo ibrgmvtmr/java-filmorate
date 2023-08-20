@@ -46,7 +46,7 @@ public class FilmsDbStorage implements FilmsStorage {
     @Override
     public Film createFilm(Film film) {
         KeyHolder generatedId = new GeneratedKeyHolder();
-        String sqlQuery = "INSERT INTO Films (NAME, DESCRIPTION, RELEASE_DATE, DURATION, MPA_ID)\n" +
+        final String sqlQuery = "INSERT INTO Films (NAME, DESCRIPTION, RELEASE_DATE, DURATION, MPA_ID)\n" +
                 " VALUES (?, ?, ?, ?, ?)";
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection
@@ -85,7 +85,7 @@ public class FilmsDbStorage implements FilmsStorage {
             throw new IllegalArgumentException("Передан недействительный объект фильма для обновления");
         }
 
-        String sqlQuery = "UPDATE FILMS " +
+        final String sqlQuery = "UPDATE FILMS " +
                 "SET NAME=?, DESCRIPTION=?, RELEASE_DATE=?, DURATION=?, MPA_ID=? " +
                 "WHERE FILM_ID=?;";
 
@@ -107,7 +107,7 @@ public class FilmsDbStorage implements FilmsStorage {
 
     @Override
     public Film getFilm(Integer filmId) {
-        String sqlQuery = "SELECT F.FILM_ID, F.NAME, F.DESCRIPTION, F.RELEASE_DATE, F.DURATION, M.MPA_ID," +
+        final String sqlQuery = "SELECT F.FILM_ID, F.NAME, F.DESCRIPTION, F.RELEASE_DATE, F.DURATION, M.MPA_ID," +
                 " M.NAME AS MPA_NAME, M.DESCRIPTION AS MPA_DESCRIPTION\n" +
                 "FROM FILMS AS F\n" +
                 "JOIN MPA AS M ON F.MPA_ID = M.MPA_ID\n" +

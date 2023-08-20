@@ -22,13 +22,13 @@ public class FilmsGenresDbStorage implements FilmsGenresStorage {
 
     @Override
     public void create(Integer filmId, Integer genreId) {
-        String sql = "INSERT INTO FILM_GENRES (FILM_ID, GENRE_ID) VALUES(?, ?)";
-        jdbcTemplate.update(sql, filmId, genreId);
+        final String sqlQuery = "INSERT INTO FILM_GENRES (FILM_ID, GENRE_ID) VALUES(?, ?)";
+        jdbcTemplate.update(sqlQuery, filmId, genreId);
     }
 
     @Override
     public List<Genre> readFilmGenres(Integer filmId) {
-        String sqlQuery = "SELECT G.GENRE_ID, G.NAME\n" +
+        final String sqlQuery = "SELECT G.GENRE_ID, G.NAME\n" +
                 "FROM GENRES G\n" +
                 "LEFT JOIN FILM_GENRES FG ON FG.GENRE_ID = G.GENRE_ID\n" +
                 "WHERE FG.FILM_ID = ?\n" +
@@ -47,7 +47,7 @@ public class FilmsGenresDbStorage implements FilmsGenresStorage {
 
     @Override
     public void delete(Integer filmId) {
-        String sqlQuery = "DELETE FROM FILM_GENRES WHERE FILM_ID = ?";
+        final String sqlQuery = "DELETE FROM FILM_GENRES WHERE FILM_ID = ?";
         jdbcTemplate.update(sqlQuery, filmId);
     }
 

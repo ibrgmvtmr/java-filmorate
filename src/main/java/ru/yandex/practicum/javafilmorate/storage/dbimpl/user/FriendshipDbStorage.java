@@ -37,8 +37,8 @@ public class FriendshipDbStorage implements FriendshipStorage {
 
     @Override
     public void removeFriend(Integer userId, Integer friendId) {
-        String sql = "DELETE FROM FRIENDSHIPS\n" +
+        final String sqlQuery = "DELETE FROM FRIENDSHIPS\n" +
                 "WHERE FRIEND_ID = ? AND USER_ID = ?";
-        jdbcTemplate.update(sql, friendId, userId);
+        jdbcTemplate.update(sqlQuery, friendId, userId);
     }
 }

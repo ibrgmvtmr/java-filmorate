@@ -1,5 +1,6 @@
 package ru.yandex.practicum.javafilmorate.controllers;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,15 +13,12 @@ import ru.yandex.practicum.javafilmorate.service.MpaService;
 import javax.validation.Valid;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/mpa")
 public class MpaController {
 
     @Autowired
     private final MpaService mpaService;
-
-    public MpaController(MpaService mpaService) {
-        this.mpaService = mpaService;
-    }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getMpa(@Valid @PathVariable Integer id) {

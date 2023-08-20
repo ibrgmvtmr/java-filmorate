@@ -50,7 +50,7 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public User update(User user) {
-        String sqlQuery = "UPDATE USERS\n" +
+        final String sqlQuery = "UPDATE USERS\n" +
                 "SET NAME=?, LOGIN=?, EMAIL=?, BIRTHDAY=?\n" +
                 "WHERE USER_ID=?;";
         int rowsUpdated = jdbcTemplate.update(sqlQuery, user.getName(), user.getLogin(), user.getEmail(), user.getBirthday(), user.getId());
@@ -64,7 +64,7 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public List<User> getUsers() {
-        String sqlQuery = "SELECT * FROM USERS";
+        final String sqlQuery = "SELECT * FROM USERS";
         return jdbcTemplate.query(sqlQuery, (rs, rowNum) -> mpaRowToUser(rs)).stream()
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
@@ -72,7 +72,7 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public User getUser(Integer userId) {
-        String sqlQuery = "SELECT * FROM USERS WHERE USER_ID = ?";
+        final String sqlQuery = "SELECT * FROM USERS WHERE USER_ID = ?";
 
         try {
             return jdbcTemplate.queryForObject(sqlQuery, (rs, rowNum) -> mpaRowToUser(rs), userId);
@@ -83,7 +83,7 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public Set<Integer> readUserFriends(Integer userId) {
-        String sqlQuery = "SELECT FRIEND_ID\n" +
+        final String sqlQuery = "SELECT FRIEND_ID\n" +
                 "FROM FRIENDSHIPS\n" +
                 "WHERE USER_ID = ?";
         Set<Integer> ids = new HashSet<>();
@@ -96,18 +96,12 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public List<User> getCommonFriends(Integer userId, Integer friendId) {
-        String sql = "SELECT u.*\n" +
-                "FROM USERS u\n" +
-                "WHERE u.USER_ID IN (\n" +
-                "    SELECT f2.FRIEND_ID\n" +
-                "    FROM FRIENDSHIPS f1\n" +
-                "    INNER JOIN FRIENDSHIPS f2 ON f1.FRIEND_ID = f2.FRIEND_ID\n" +
-                "    WHERE f1.USER_ID = ?\n" +
-                "    AND f2.USER_ID = ?\n" +
-                ")";
+        final String sqlQuery = "SELECT * FROM USERS U, FRIENDSHIPS F1, FRIENDSHIPS F2 " +
+                "WHERE U.USER_ID = F1.FRIEND_ID AND U.USER_ID = F2.FRIEND_ID AND F1.USER_ID = ? AND F2.USER_ID = ?";
 
-        return jdbcTemplate.query(sql, (rs, rowNum) -> mpaRowToUser(rs), userId, friendId);
+        return jdbcTemplate.query(sqlQuery, (rs, rowNum) -> mpaRowToUser(rs), userId, friendId);
     }
+
 
     public User mpaRowToUser(ResultSet resultSet) throws SQLException {
         return User.builder()

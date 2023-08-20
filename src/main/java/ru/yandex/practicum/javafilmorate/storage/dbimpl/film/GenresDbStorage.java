@@ -28,7 +28,7 @@ public class GenresDbStorage implements GenresStorage {
     @Override
     public Genre create(Genre genre) {
         KeyHolder generatedId = new GeneratedKeyHolder();
-        String sqlQuery = "INSERT INTO GENRES\n" +
+        final String sqlQuery = "INSERT INTO GENRES\n" +
                           "(NAME)\n" +
                           "VALUES(?);";
         jdbcTemplate.update(connection -> {
@@ -44,7 +44,7 @@ public class GenresDbStorage implements GenresStorage {
 
     @Override
     public Genre update(Genre genre) {
-        String sqlQuery = "UPDATE GENRES\n" +
+        final String sqlQuery = "UPDATE GENRES\n" +
                 "SET NAME = ?\n" +
                 "WHERE GENRE_ID = ?;";
         jdbcTemplate.update(sqlQuery, genre.getName(), genre.getId());
@@ -53,7 +53,7 @@ public class GenresDbStorage implements GenresStorage {
 
     @Override
     public Collection<Genre> getGenres() {
-        String sqlQuery = "SELECT *\n" +
+        final String sqlQuery = "SELECT *\n" +
                           "FROM GENRES;";
        return jdbcTemplate.query(sqlQuery, (rs, rowNum) -> mapRowToGenre(rs)).stream()
                 .filter(Objects::nonNull)
@@ -62,7 +62,7 @@ public class GenresDbStorage implements GenresStorage {
 
     @Override
     public Genre getGenre(Integer id) {
-        String sqlQuery = "SELECT *\n" +
+        final String sqlQuery = "SELECT *\n" +
                           "FROM GENRES\n" +
                           "WHERE GENRE_ID = ?;";
         return jdbcTemplate.query(sqlQuery, (rs, rowNum) -> mapRowToGenre(rs), id).stream()

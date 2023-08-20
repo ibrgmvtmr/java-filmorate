@@ -15,13 +15,10 @@ import javax.validation.constraints.PositiveOrZero;
 public class Mpa {
     @PositiveOrZero
     private Integer id;
+
     @NotBlank(message = "Название возрастного ограничения не может быть пустым!")
     private String name;
-    @NotBlank(message = "Описание возрастного ограничения не может быть пустым!")
+
     private String description;
 
-    public Mpa(Integer id, String name) {
-        this.id = id;
-        this.name = name;
-    }
 }

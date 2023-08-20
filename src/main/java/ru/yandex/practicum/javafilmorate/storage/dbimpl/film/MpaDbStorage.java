@@ -25,7 +25,7 @@ public class MpaDbStorage implements MpaStorage {
 
     @Override
     public Mpa create(Mpa mpa) {
-        String sqlQuery = "INSERT INTO MPA (NAME, DESCRIPTION)\n " +
+        final String sqlQuery = "INSERT INTO MPA (NAME, DESCRIPTION)\n " +
                           "VALUES (?, ?)";
         jdbcTemplate.update(sqlQuery, mpa.getName(), mpa.getDescription());
         Integer id = jdbcTemplate.queryForObject("SELECT MAX(MPA_ID) FROM MPA", Integer.class);
@@ -35,7 +35,7 @@ public class MpaDbStorage implements MpaStorage {
 
     @Override
     public Mpa update(Mpa mpa) {
-        String sqlQuery = "UPDATE MPA\n " +
+        final String sqlQuery = "UPDATE MPA\n " +
                 "SET NAME = ?, DESCRIPTION = ?\n" +
                 "WHERE MPA_ID = ?;";
         jdbcTemplate.update(sqlQuery, mpa.getName(), mpa.getDescription(), mpa.getId());
@@ -44,7 +44,7 @@ public class MpaDbStorage implements MpaStorage {
 
     @Override
     public Mpa getMpa(Integer id) {
-        String sqlQuery = "SELECT MPA_ID, NAME, DESCRIPTION\n" +
+        final String sqlQuery = "SELECT MPA_ID, NAME, DESCRIPTION\n" +
                 "FROM MPA\n" +
                 "WHERE MPA_ID = ?;";
         List<Mpa> result = jdbcTemplate.query(sqlQuery, (rs, rowNum) -> mapRowToMpa(rs), id);
@@ -58,16 +58,16 @@ public class MpaDbStorage implements MpaStorage {
 
     @Override
     public List<Mpa> getMpas() {
-        String sql = "SELECT M.MPA_ID AS ID, M.NAME, M.DESCRIPTION " +
+        final String sqlQuery = "SELECT M.MPA_ID AS ID, M.NAME, M.DESCRIPTION " +
                 "FROM MPA M";
-        return jdbcTemplate.query(sql,  (rs, rowNum) -> mapRowToMpa(rs)).stream()
+        return jdbcTemplate.query(sqlQuery,  (rs, rowNum) -> mapRowToMpa(rs)).stream()
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 
     @Override
     public Mpa getFilmMpa(Integer id) {
-        String sqlQuery = "SELECT M.*\n" +
+        final String sqlQuery = "SELECT M.*\n" +
                 "FROM MPA M\n" +
                 "LEFT JOIN FILMS F ON F.MPA_ID = M.MPA_ID\n" +
                 "WHERE FILM_ID = ?;";

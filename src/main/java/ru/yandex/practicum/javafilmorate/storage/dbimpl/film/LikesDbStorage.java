@@ -19,14 +19,15 @@ public class LikesDbStorage implements LikesStorage {
 
     @Override
     public void addLike(Integer filmId, Integer userId) {
-        String sqlQuery = "INSERT INTO LIKES(FILM_ID, USER_ID)\n" +
-                "VALUES(?, ?);";
+        final String sqlQuery = "MERGE INTO LIKES (FILM_ID, USER_ID) " +
+                "KEY (FILM_ID, USER_ID) " +
+                "VALUES (?, ?)";
         jdbcTemplate.update(sqlQuery, filmId, userId);
     }
 
     @Override
     public List<Integer> readUsersLikes(Integer filmId) {
-        String sql = "SELECT USER_ID\n" +
+        final String sql = "SELECT USER_ID\n" +
                 "FROM LIKES\n" +
                 "WHERE FILM_ID = ?";
         return jdbcTemplate.queryForList(sql, Integer.class, filmId);
@@ -34,7 +35,7 @@ public class LikesDbStorage implements LikesStorage {
 
     @Override
     public void deleteLike(Integer userId, Integer filmId) {
-        String sqlQuery = "DELETE FROM LIKES WHERE USER_ID = ? AND FILM_ID = ?";
+        final String sqlQuery = "DELETE FROM LIKES WHERE USER_ID = ? AND FILM_ID = ?";
         jdbcTemplate.update(sqlQuery, userId, filmId);
     }
 }

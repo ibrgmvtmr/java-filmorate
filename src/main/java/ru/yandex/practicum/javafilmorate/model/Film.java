@@ -4,7 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.yandex.practicum.javafilmorate.exceptions.validation.DateForFilms;
+import ru.yandex.practicum.javafilmorate.validation.DateForFilms;
+
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
